@@ -101,26 +101,9 @@ lastchance() { \
     }
 
 installpkg() { \
-    for x in "${standardpkgs[@]}"; do
-        dialog --colors --title "Installing packages from Arch repo" --infobox "\Z2Installing \`$x\` from the Arch repositories." 5 70
-        # >/dev/null redirects stdout to /dev/null.
-        # 2>&1 redirects stderr to be stdout.
-        sudo pacman --noconfirm --needed -S "$x" >/dev/null 2>&1 ;
-    done
-    }
-
-backup_directs() {
-    for x in "${directs[@]}"; do
-        dialog --colors --title "Backing up some files and directories" --infobox "\Z2Since \`$HOME/$x\` already exists, we will make a backup at \`$HOME/$x.$(date +%Y%m%d%H%M)\`." 5 70
-        [ -d "$HOME/$x" ] && mv "$HOME/$x" "$HOME/$x.$(date +%Y%m%d%H%M)"
-    done
-    }
-
-backup_confs() {
-    for x in "${confs[@]}"; do
-        dialog --colors --title "Backing up some files and directories" --infobox "\Z2Since \`$HOME/$x\` already exists, we will make a backup at \`$HOME/$x.$(date +%Y%m%d%H%M)\`." 5 70
-        [ -f "$HOME/$x" ] && mv "$HOME/$x" "$HOME/$x.$(date +%Y%m%d%H%M)"
-    done
+    # >/dev/null redirects stdout to /dev/null.
+    # 2>&1 redirects stderr to be stdout.
+    sudo pacman --noconfirm --needed -S "$x" >/dev/null 2>&1 ;
     }
 
 installaur() { \
@@ -129,6 +112,7 @@ installaur() { \
 
 mkdtdots() {
     dialog --colors --title "Making our working directory" --infobox "\Z2Making a directory called  'dtdots' and cd'ing into it." 5 70
+    cd "$HOME"
     sleep 1
     mkdir dtdots
     cd dtdots || exit
@@ -141,70 +125,6 @@ gitclonedots() {
     git clone https://gitlab.com/dwt1/wallpapers.git
     }
 
-copy_dirs_dtdots() {
-    for x in "${directs[@]}"; do
-        dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
-        [ -d "$x" ] &&
-        mv "$x" "$HOME/$x"
-    done
-    }
-
-copy_dirs_dotfiles() {
-    for x in "${directs[@]}"; do
-        dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
-        [ -d "dotfiles/$x" ] &&
-        mv "dotfiles/$x" "$HOME/$x"
-    done
-    }
-
-copy_confs_dotfiles() {
-    for x in "${confs[@]}"; do
-        dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
-        [ -f "dotfiles/$x" ] &&
-        mkdir --parents "$HOME/$(echo "$x" | awk 'BEGIN { FS = "/" } ; { OFS = FS } ; { $NF="" ; print $0 }')" &&
-        mv "dotfiles/$x" "$HOME/$x"
-    done
-    }
-
-installaur() {
-    for x in "${aurpkgs[@]}"; do
-        installaur "$x"
-    done
-    }
-
-pachooks() {
-    dialog --colors --title "Adding pacman hooks" --infobox "\Z2Adding pacman hooks that will automatically recompile xmonad anytime there are upgrades to xmonad or haskell programs." 5 70
-    sleep 1
-    sudo mv "$HOME"/.xmonad/pacman-hooks/*.hook /etc/pacman.d/hooks/
-    }
-
-xmonadcompile() {
-    dialog --colors --title "Compiling XMonad" --infobox "\Z2Almost finished!  The final part of this installation is recompiling XMonad." 5 70
-    sleep 1
-    xmonad --recompile
-    ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
-    }
-
-nitrogen() {
-    dialog --colors --title "Setting up Nitrogen wallpaper" --infobox "\ZCopying nitrogen wallpaper configuration files." 5 70
-    sleep 1
-    old_home="/home/dt"
-    sed -i "s#$old_home#$HOME#g" "$HOME/.config/nitrogen/nitrogen.cfg" "$HOME/.config/nitrogen/bg-saved.cfg"
-    }
-
-doomemacs() {
-    dialog --colors --title "Installing Doom Emacs" --infobox "\Z2A major component of DTOS is Doom Emacs. So let's install it!" 5 70
-    sleep 1
-    git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-    ~/.emacs.d/bin/doom install
-    }
-
-cleanup() {
-    dialog --colors --title "Cleaning up our mess!" --infobox "\Z2Removing the working directory that we used for 'git cloning' the stuff we needed." 5 70
-    sleep 1
-    rm -rf dtdots
-    }
-
 loginmanager() { \
     dialog --colors --title "\Z5\ZbInstallation Complete!" --msgbox "\Z2Now logout of your current desktop environment or window manager and choose XMonad from your login manager.  ENJOY!" 10 60
     }
@@ -215,30 +135,61 @@ welcome || error "User exited."
 
 lastchance || error "User exited."
 
-installpkg || error "Error installing standard Arch packages!"
+for x in "${standardpkgs[@]}"; do
+    dialog --colors --title "Installing packages from Arch repo" --infobox "\Z2Installing \`$x\` from the Arch repositories." 5 70
+    installpkg "$x"
+done
 
-backup_directs || error "Error backing up directories!"
+for x in "${directs[@]}"; do
+    dialog --colors --title "Backing up some files and directories" --infobox "\Z2Since \`$HOME/$x\` already exists, we will make a backup at \`$HOME/$x.$(date +%Y%m%d%H%M)\`." 5 70
+    [ -d "$HOME/$x" ] && mv "$HOME/$x" "$HOME/$x.$(date +%Y%m%d%H%M)"
+done
 
-backup_confs || error "Error backing up config files!"
+for x in "${confs[@]}"; do
+    dialog --colors --title "Backing up some files and directories" --infobox "\Z2Since \`$HOME/$x\` already exists, we will make a backup at \`$HOME/$x.$(date +%Y%m%d%H%M)\`." 5 70
+    [ -f "$HOME/$x" ] && mv "$HOME/$x" "$HOME/$x.$(date +%Y%m%d%H%M)"
+done
 
 mkdtdots || error "Error making 'dtdots' directory or cd'ing into it."
 
 gitclonedots || error "Error cloning DT's dotfiles or wallpapers repo from GitLab."
 
-copy_dirs_dtdots || error "Error copying dotfiles to appropriate location."
-copy_dirs_dotfiles || error "Error copying dotfiles to appropriate location."
-copy_confs_dotfiles || error "Error copying dotfiles to appropriate location."
+for x in "${directs[@]}"; do
+    dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
+    [ -d "$x" ] &&
+    mv "$x" "$HOME/$x"
+done
 
-installaur || error "Error installing AUR packages. Is 'yay' installed?"
+for x in "${directs[@]}"; do
+    dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
+    [ -d "dotfiles/$x" ] &&
+    mv "dotfiles/$x" "$HOME/$x"
+done
 
-pachooks || error "Error copying pacman hooks."
+for x in "${confs[@]}"; do
+    dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
+    [ -f "dotfiles/$x" ] &&
+    mkdir --parents "$HOME/$(echo "$x" | awk 'BEGIN { FS = "/" } ; { OFS = FS } ; { $NF="" ; print $0 }')" &&
+    mv "dotfiles/$x" "$HOME/$x"
+done
 
-doomemacs || error "Error installing Doom Emacs."
+for x in "${aurpkgs[@]}"; do
+    installaur "$x"
+done
 
-xmonadcompile || error "Error recompiling xmonad or xmonadctl."
+sudo mv $HOME/.xmonad/pacman-hooks/recompile-xmonad.hook $HOME/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
 
-nitrogen || error "Error installing nitrogen configs."
+dialog --colors --title "Installing Doom Emacs" --infobox "\Z2A major component of DTOS is Doom Emacs. So let's install it!" 5 70
+sleep 1
+git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.emacs.d
+$HOME/.emacs.d/bin/doom install
 
-cleanup || error "Error cleaning up our mess."
+xmonad --recompile
+ghc -dynamic $HOME/.xmonad/xmonadctl.hs
+
+old_home="/home/dt"
+sed -i "s#$old_home#$HOME#g" "$HOME/.config/nitrogen/nitrogen.cfg" "$HOME/.config/nitrogen/bg-saved.cfg"
+
+rm -rf dtdots
 
 loginmanager || error "User exited."
