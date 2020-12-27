@@ -36,7 +36,7 @@ This is a script that will install what I sarcastically call DTOS (DT's operatin
 #+end_src
 
 * CHECK THAT USER IS NOT ROOT
-Don't run this script as root!  First, for safety reasons. Second, 'yay' cannot be run as root so the script will fail at that point.  Instead, you will be asked to enter a root password when necessary.
+Don't run this script as root!  First, for safety reasons. Second, 'yay' cannot be run as root so the script will fail at that point.  Instead, you will be asked to enter a root password at several points during the installation.
 
 #+begin_src bash
 if [ "$(id -u)" = 0 ]; then
