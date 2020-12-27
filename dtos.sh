@@ -139,3 +139,58 @@ for x in "${standardpkgs[@]}"; do
     dialog --colors --title "Installing packages from Arch repo" --infobox "\Z2Installing \`$x\` from the Arch repositories." 5 70
     installpkg "$x"
 done
+
+for x in "${directs[@]}"; do
+    dialog --colors --title "Backing up some files and directories" --infobox "\Z2Since \`$HOME/$x\` already exists, we will make a backup at \`$HOME/$x.$(date +%Y%m%d%H%M)\`." 5 70
+    [ -d "$HOME/$x" ] && mv "$HOME/$x" "$HOME/$x.$(date +%Y%m%d%H%M)"
+done
+
+for x in "${confs[@]}"; do
+    dialog --colors --title "Backing up some files and directories" --infobox "\Z2Since \`$HOME/$x\` already exists, we will make a backup at \`$HOME/$x.$(date +%Y%m%d%H%M)\`." 5 70
+    [ -f "$HOME/$x" ] && mv "$HOME/$x" "$HOME/$x.$(date +%Y%m%d%H%M)"
+done
+
+mkdtdots || error "Error making 'dtdots' directory or cd'ing into it."
+
+gitclonedots || error "Error cloning DT's dotfiles or wallpapers repo from GitLab."
+
+for x in "${directs[@]}"; do
+    dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
+    [ -d "$x" ] &&
+    mv "$x" "$HOME/$x"
+done
+
+for x in "${directs[@]}"; do
+    dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
+    [ -d "dotfiles/$x" ] &&
+    mv "dotfiles/$x" "$HOME/$x"
+done
+
+for x in "${confs[@]}"; do
+    dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
+    [ -f "dotfiles/$x" ] &&
+    mkdir --parents "$HOME/$(echo "$x" | awk 'BEGIN { FS = "/" } ; { OFS = FS } ; { $NF="" ; print $0 }')" &&
+    mv "dotfiles/$x" "$HOME/$x"
+done
+
+for x in "${aurpkgs[@]}"; do
+    installaur "$x"
+done
+
+sudo mv "$HOME"/.xmonad/pacman-hooks/recompile-xmonad.hook "$HOME"/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
+
+dialog --colors --title "Installing Doom Emacs" --infobox "\Z2A major component of DTOS is Doom Emacs. So let's install it!" 5 70
+sleep 1
+git clone --depth 1 https://github.com/hlissner/doom-emacs "$HOME"/.emacs.d
+"$HOME"/.emacs.d/bin/doom install
+
+xmonad --recompile
+ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
+
+old_home="/home/dt"
+sed -i "s#$old_home#$HOME#g" "$HOME/.config/nitrogen/nitrogen.cfg" "$HOME/.config/nitrogen/bg-saved.cfg"
+
+cd "$HOME" || exit
+rm -rf dtdots
+
+loginmanager || error "User exited."

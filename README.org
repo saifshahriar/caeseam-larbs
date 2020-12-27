@@ -315,6 +315,7 @@ sed -i "s#$old_home#$HOME#g" "$HOME/.config/nitrogen/nitrogen.cfg" "$HOME/.confi
 
 ** Deleting the 'dtdots' directory we created for git cloning
 #+begin_src bash
+cd "$HOME" || exit
 rm -rf dtdots
 #+end_src
 
