@@ -112,7 +112,7 @@ installaur() { \
 
 mkdtdots() {
     dialog --colors --title "Making our working directory" --infobox "\Z2Making a directory called  'dtdots' and cd'ing into it." 5 70
-    cd "$HOME"
+    cd "$HOME" || exit
     sleep 1
     mkdir dtdots
     cd dtdots || exit
@@ -177,15 +177,15 @@ for x in "${aurpkgs[@]}"; do
     installaur "$x"
 done
 
-sudo mv $HOME/.xmonad/pacman-hooks/recompile-xmonad.hook $HOME/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
+sudo mv "$HOME"/.xmonad/pacman-hooks/recompile-xmonad.hook "$HOME"/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
 
 dialog --colors --title "Installing Doom Emacs" --infobox "\Z2A major component of DTOS is Doom Emacs. So let's install it!" 5 70
 sleep 1
-git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.emacs.d
-$HOME/.emacs.d/bin/doom install
+git clone --depth 1 https://github.com/hlissner/doom-emacs "$HOME"/.emacs.d
+"$HOME"/.emacs.d/bin/doom install
 
 xmonad --recompile
-ghc -dynamic $HOME/.xmonad/xmonadctl.hs
+ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
 
 old_home="/home/dt"
 sed -i "s#$old_home#$HOME#g" "$HOME/.config/nitrogen/nitrogen.cfg" "$HOME/.config/nitrogen/bg-saved.cfg"

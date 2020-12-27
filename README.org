@@ -183,7 +183,7 @@ installaur() { \
 #+begin_src bash
 mkdtdots() {
     dialog --colors --title "Making our working directory" --infobox "\Z2Making a directory called  'dtdots' and cd'ing into it." 5 70
-    cd "$HOME"
+    cd "$HOME" || exit
     sleep 1
     mkdir dtdots
     cd dtdots || exit
@@ -290,21 +290,21 @@ done
 
 ** Pacman hooks that force xmonad to recompile after xmonad/haskell updates.
 #+begin_src bash
-sudo mv $HOME/.xmonad/pacman-hooks/recompile-xmonad.hook $HOME/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
+sudo mv "$HOME"/.xmonad/pacman-hooks/recompile-xmonad.hook "$HOME"/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
 #+end_src
 
 ** Installing Doom Emacs
 #+begin_src bash
 dialog --colors --title "Installing Doom Emacs" --infobox "\Z2A major component of DTOS is Doom Emacs. So let's install it!" 5 70
 sleep 1
-git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.emacs.d
-$HOME/.emacs.d/bin/doom install
+git clone --depth 1 https://github.com/hlissner/doom-emacs "$HOME"/.emacs.d
+"$HOME"/.emacs.d/bin/doom install
 #+end_src
 
 ** Compiling xmonad and the xmonadctl script
 #+begin_src bash
 xmonad --recompile
-ghc -dynamic $HOME/.xmonad/xmonadctl.hs
+ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
 #+end_src
 
 ** Setting nitrogen wallpaper directory and setting a wallpaper
