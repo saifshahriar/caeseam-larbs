@@ -4,6 +4,40 @@
 #+PROPERTY: header-args :tangle dtos.sh
 #+STARTUP: showeverything
 
+* TABLE OF CONTENT :toc:
+- [[#about-dtos][ABOUT DTOS]]
+- [[#shebang-plus-comments][SHEBANG PLUS COMMENTS]]
+- [[#check-that-user-is-not-root][CHECK THAT USER IS NOT ROOT]]
+- [[#list-of-standard-packages-to-install][LIST OF STANDARD PACKAGES TO INSTALL]]
+- [[#list-of-aur-packages-to-install][LIST OF AUR PACKAGES TO INSTALL]]
+- [[#list-of-config-files-we-will-overwrite][LIST OF CONFIG FILES WE WILL OVERWRITE]]
+- [[#list-of-directories-we-will-overwrite][LIST OF DIRECTORIES WE WILL OVERWRITE]]
+- [[#functions][FUNCTIONS]]
+  - [[#error][error]]
+  - [[#welcome][welcome]]
+  - [[#lastchance][lastchance]]
+  - [[#installpkg][installpkg]]
+  - [[#installaur][installaur]]
+  - [[#mkdtdots][mkdtdots]]
+  - [[#gitclonedots][gitclonedots]]
+  - [[#loginmanager][loginmanager]]
+- [[#running-this-script][RUNNING THIS SCRIPT]]
+  - [[#sync-the-arch-repos][Sync the Arch repos]]
+  - [[#welcome-message][Welcome message]]
+  - [[#asking-user-to-confirm-that-he-really-wants-to-install-dts-dots][Asking user to confirm that he really wants to install DT's dots.]]
+  - [[#install-the-packages-from-standard-arch-repositories][Install the packages from standard Arch repositories.]]
+  - [[#if-certain-directories-already-exist-we-will-make-backups-at-directorytimestamp][If certain directories already exist, we will make backups at DIRECTORY.TIMESTAMP]]
+  - [[#if-config-files-already-exist-we-will-make-backups-at-filenametimestamp][If config files already exist, we will make backups at FILENAME.TIMESTAMP]]
+  - [[#make-a-directory-named-dtdots-for-our-git-cloning][Make a directory named 'dtdots' for our git cloning.]]
+  - [[#pulling-down-dts-dotfiles-and-wallpapers-from-gitlab][Pulling down DT's dotfiles and wallpapers from GitLab.]]
+  - [[#copying-dts-config-files-into-the-appropriate-directories][Copying DT's config files into the appropriate directories.]]
+  - [[#install-packages-from-arch-user-repository-aur][Install packages from Arch User Repository (AUR).]]
+  - [[#pacman-hooks-that-force-xmonad-to-recompile-after-xmonadhaskell-updates][Pacman hooks that force xmonad to recompile after xmonad/haskell updates.]]
+  - [[#installing-doom-emacs][Installing Doom Emacs]]
+  - [[#compiling-xmonad-and-the-xmonadctl-script][Compiling xmonad and the xmonadctl script]]
+  - [[#setting-nitrogen-wallpaper-directory-and-setting-a-wallpaper][Setting nitrogen wallpaper directory and setting a wallpaper]]
+  - [[#deleting-the-dtdots-directory-we-created-for-git-cloning][Deleting the 'dtdots' directory we created for git cloning]]
+  - [[#message-stating-that-the-installation-is-complete][Message stating that the installation is complete!]]
 
 * ABOUT DTOS
 #+CAPTION: DTOS Scrot
