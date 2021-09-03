@@ -105,6 +105,7 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "neovim"
 "network-manager-applet"
 "opendoas"
+"otf-font-awesome"
 "paru"
 "pcmanfm"
 "picom"
@@ -145,21 +146,17 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "zathura"
 "zsh")
 
-install_pkgs() { \
-    # >/dev/null redirects stdout to /dev/null.
-    # 2>&1 redirects stderr to be stdout.
-    sudo pacman --noconfirm --needed -S "$x" >/dev/null 2>&1 ;
-}
-
 for x in "${dtospkgs[@]}"; do
-    dialog --colors --title "Installing the software" --infobox "\Z2Installing \`$x\` from the repositories." 5 70
-    install_pkgs "$x"
+    sudo pacman -S "$x"
 done
 
 echo "#########################################################"
 echo "## Installing Doom Emacs. This may take a few minutes. ##"
 echo "#########################################################"
-sudo pacman --noconfirm --needed -S doom-emacs
+[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
+[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom install
 
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##"
