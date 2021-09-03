@@ -236,7 +236,7 @@ echo "################################################################"
 mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
 [ -d ~/.config ] && mkdir ~/.config
 [ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
-cp -Rf "/etc/skel/"* ~
+cd /etc/skel && cp -Rf . ~ && cd -
 #+end_src
 
 Things we need to make sure we move over from skel:

@@ -166,7 +166,7 @@ echo "################################################################"
 mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
 [ -d ~/.config ] && mkdir ~/.config
 [ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
-cp -Rf "/etc/skel/"* ~
+cd /etc/skel && cp -Rf . ~ && cd -
 
 cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
 cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
