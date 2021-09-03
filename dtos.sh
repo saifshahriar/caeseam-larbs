@@ -158,13 +158,13 @@ echo "## Installing Doom Emacs. This may take a few minutes. ##"
 echo "#########################################################"
 sudo pacman --noconfirm --needed -S doom-emacs
 
-cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H.%M.%S)
-[ -d ~/.config ] || mkdir ~/.config && \
-    cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H.%M.%S) && \
-    cp -rf /etc/skel/* ~ && \
-    echo "################################################################" && \
-    echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##" && \
     echo "################################################################"
+    echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##"
+    echo "################################################################"
+mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
+[ -d ~/.config ] || mkdir ~/.config && \
+    cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M) && \
+    cp -Rf "/etc/skel/"* ~
 
 cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
 cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
