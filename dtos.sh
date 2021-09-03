@@ -148,7 +148,7 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "zsh")
 
 for x in "${dtospkgs[@]}"; do
-    sudo pacman -S "$x"
+    sudo pacman --noconfirm --needed -S "$x"
 done
 
 echo "#########################################################"
