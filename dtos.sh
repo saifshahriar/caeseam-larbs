@@ -62,6 +62,7 @@ receive_key() { \
     echo "## Adding PGP key C71486C31555B12E ##"
     echo "#####################################"
     sudo pacman-key --recv-key C71486C31555B12E
+    sudo pacman-key --lsign-key C71486C31555B12E
 }
 
 receive_key || error "Error receiving PGP key C71486C31555B12E"
