@@ -2,7 +2,7 @@
 #  ____ _____ ___  ____
 # |  _ \_   _/ _ \/ ___|   Derek Taylor (DistroTube)
 # | | | || || | | \___ \   http://www.youtube.com/c/DistroTube
-# | |_| || || |_| |___) |  http://www.gitlab.com/dwt1/
+# | |_| || || |_| |___) |  http://www.gitlab.com/dwt1/dtos
 # |____/ |_| \___/|____/
 #
 # NAME: DTOS
@@ -10,188 +10,187 @@
 # WARNING: Run this script at your own risk.
 
 if [ "$(id -u)" = 0 ]; then
-    echo "This script should NOT be run as root. Run this script as a normal user."
-    echo "Instead, you will be asked to enter a root password when necessary."
+    echo "##################################################################"
+    echo "This script MUST NOT be run as root user since it makes changes"
+    echo "to the \$HOME directory of the \$USER executing this script."
+    echo "The \$HOME directory of the root user is, of course, '/root'."
+    echo "We don't want to mess around in there. So run this script as a"
+    echo "normal user. You will be asked for a sudo password when necessary."
+    echo "##################################################################"
     exit 1
 fi
 
-declare -a standardpkgs=("alacritty"
+error() { \
+    clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
+}
+
+welcome() { \
+    dialog --colors --title "\Z5\ZbInstalling DTOS!" --msgbox "\Z2This is a script that will install what I sarcastically call \Z5DTOS (DT's operating system)\Zn\Z2. It's really just an installation script for those that want to try out my XMonad desktop.  We will add DTOS repos to Pacman and install the XMonad tiling window manager, the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs and many other essential programs needed to make my dotfiles work correctly.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
+    dialog --colors --title "\Z5\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z2This script is not allowed to be run as root. But you will be asked to enter your root password at various points during this installation. This is to give PACMAN the necessary permissions to install the software." 8 60
+}
+
+welcome || error "User choose to exit."
+
+lastchance() { \
+    dialog --colors --title "\Z5\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z2Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
+}
+
+lastchance || error "User choose to exit."
+
+addrepo() { \
+    echo "#########################################################"
+    echo "## Adding the DTOS core repository to /etc/pacman.conf ##"
+    echo "#########################################################"
+    grep -qxF "[dtos-core-repo]" /etc/pacman.conf || echo "[dtos-core-repo]" | sudo tee -a /etc/pacman.conf
+    grep -qxF "SigLevel = Required DatabaseOptional" /etc/pacman.conf || echo "SigLevel = Required DatabaseOptional" | sudo tee -a /etc/pacman.conf
+    grep -qxF "Server = https://gitlab.com/dwt1/$repo/-/raw/main/$arch" /etc/pacman.conf || echo "Server = https://gitlab.com/dwt1/$repo/-/raw/main/$arch" | sudo tee -a /etc/pacman.conf
+}
+
+addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
+
+addkeyserver() { \
+    echo "#######################################################"
+    echo "## Adding keyservers to /etc/pacman.d/gnupg/gpg.conf ##"
+    echo "#######################################################"
+    grep -qxF "keyserver hkp://keyserver.ubuntu.com:80" /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkp://keyserver.ubuntu.com:80" | sudo tee -a /etc/pacman.d/gnupg/gpg.conf
+    grep -qxF "keyserver hkps://keyserver.ubuntu.com:443" /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkps://keyserver.ubuntu.com:443" | sudo tee -a /etc/pacman.d/gnupg/gpg.conf
+}
+
+addrepo || error "Error adding keyservers to /etc/pacman.d/gnupg/gpg.conf"
+
+receive_key() { \
+    echo "#####################################"
+    echo "## Adding PGP key C71486C31555B12E ##"
+    echo "#####################################"
+    sudo pacman-key --recv-key C71486C31555B12E
+}
+
+receive_key || error "Error receiving PGP key C71486C31555B12E"
+
+sudo pacman --noconfirm --needed -Sy dialog || error "Error syncing the repos."
+
+declare -a dtospkgs=("adobe-source-code-pro-fonts"
+"adobe-source-sans-fonts"
+"alacritty"
+"awesome"
+"aura"
+"bluez"
+"bluez-utils"
 "bash"
+"bat"
+"cups"
+"dmenu-distrotube"
+"dwm-distrotube"
+"dwmblocks-distrotube"
+"dmscripts"
+"dtos-backgrounds"
+"dtos-bash"
+"dtos-fish"
+"dtos-local-bin"
+"dtos-xmobar"
+"dtos-xmonad"
+"dtos-xwallpaper"
+"dtos-zsh"
 "emacs"
-"exa"
+"fd"
 "fish"
-"htop"
+"git"
+"libxft-bgra"
 "lolcat"
 "lxappearance"
 "lxsession"
 "maim"
 "mpv"
 "neovim"
-"nitrogen"
-"nm-applet"
+"network-manager-applet"
 "opendoas"
-"pass"
+"paru"
 "pcmanfm"
+"picom"
 "qalculate-gtk"
+"qtile"
 "qt5ct"
 "qutebrowser"
-"s-tui"
+"ripgrep"
+"rust"
+"sddm"
+"shell-color-scripts"
+"shellcheck"
+"st-distrotube"
+"stack"
 "sxiv"
-"ttf-font-awesome"
+"ttf-hack"
+"ttf-joypixels"
+"ttf-mononoki"
+"ttf-ms-fonts"
 "ttf-ubuntu-font-family"
 "trayer"
+"vim"
 "volumeicon"
-"xmobar"
+"xf86-video-qxl"
+"xf86-video-intel"
+"xf86-video-amdgpu"
+"xf86-video-nouveau"
 "xmonad"
 "xmonad-contrib"
+"xmobar"
+"xorg-server"
+"xorg-xkill"
+"xorg-xmessage"
+"xorg-xprop"
+"xterm"
+"xwallpaper"
+"yad"
 "zathura"
 "zsh")
 
-declare -a aurpkgs=("mbsync-git"
-"mu"
-"neovim-plug-git"
-"nerd-fonts-mononoki"
-"nerd-fonts-source-code-pro"
-"picom-jonaburg-git"
-"shell-color-scripts"
-"starship")
-
-declare -a confs=(".bashrc"
-".config/alacritty/alacritty.yml"
-".config/fish/config.fish"
-".config/nvim/init.vim"
-".config/qutebrowser/config.py"
-".config/xmobar/trayer-padding-icon.sh"
-".config/xmobar/xmobarrc0"
-".config/xmobar/xmobarrc1"
-".config/xmobar/xmobarrc2"
-".doom.d/aliases"
-".doom.d/config.el"
-".doom.d/config.org"
-".doom.d/init.el"
-".doom.d/packages.el"
-".local/bin/clock"
-".local/bin/kernel"
-".local/bin/memory"
-".local/bin/pacupdate"
-".local/bin/upt"
-".local/bin/volume"
-".xmonad/xmonad.hs"
-".xmonad/xmonadctl.hs"
-".xmonad/xpm/haskell_20.xpm"
-".zshrc")
-
-declare -a directs=(".config/nitrogen"
-".doom.d"
-".emacs.d"
-".xmonad"
-"dtdots"
-"wallpapers")
-
-error() { \
-    clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
-    }
-
-welcome() { \
-    dialog --colors --title "\Z5\ZbInstalling DTOS!" --msgbox "\Z2This is a script that will install what I sarcastically call \Z5DTOS (DT's operating system)\Zn\Z2. It's really just an installation script for those that want to try out my XMonad desktop.  We will install the XMonad tiling window manager, the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs and many other essential programs needed to make my dotfiles work correctly.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
-    dialog --colors --title "\Z5\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z2This script is not allowed to be run as root. But you will be asked to enter your root password at various points during this installation. This is to give PACMAN and YAY the permissions needed to install software.  Also, make sure you actually have YAY installed before running this script!" 8 60
-    }
-
-lastchance() { \
-    dialog --colors --title "\Z5\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z2Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
-    }
-
-installpkg() { \
+install_pkgs() { \
     # >/dev/null redirects stdout to /dev/null.
     # 2>&1 redirects stderr to be stdout.
     sudo pacman --noconfirm --needed -S "$x" >/dev/null 2>&1 ;
-    }
+}
 
-installaur() { \
-    yay -S --nocleanmenu --nodiffmenu --noeditmenu --noprovides --noremovemake --useask "$1"
-    }
+for x in "${dtospkgs[@]}"; do
+    dialog --colors --title "Installing the software" --infobox "\Z2Installing \`$x\` from the repositories." 5 70
+    install_pkgs "$x"
+done
 
-mkdtdots() {
-    dialog --colors --title "Making our working directory" --infobox "\Z2Making a directory called  'dtdots' and cd'ing into it." 5 70
-    cd "$HOME" || exit
-    sleep 1
-    mkdir dtdots
-    cd dtdots || exit
-    }
+echo "#########################################################"
+echo "## Installing Doom Emacs. This may take a few minutes. ##"
+echo "#########################################################"
+sudo pacman --noconfirm --needed -S doom-emacs
 
-gitclonedots() {
-    dialog --colors --title "Cloning dotfiles" --infobox "\Z2Cloning the 'dotfiles' and 'wallpapers' repositories from DT's GitLab." 5 70
-    sleep 1
-    git clone https://gitlab.com/dwt1/dotfiles.git
-    git clone https://gitlab.com/dwt1/wallpapers.git
-    }
+cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H.%M.%S)
+[ -d ~/.config ] || mkdir ~/.config && \
+    cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H.%M.%S) && \
+    cp -rf /etc/skel/* ~ && \
+    echo "################################################################" && \
+    echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##" && \
+    echo "################################################################"
+
+cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
+cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
+
+xmonad_recompile() { \
+    echo "########################"
+    echo "## Recompiling XMonad ##"
+    echo "########################"
+    xmonad --recompile
+}
+
+xmonad_recompile || error "Error recompiling Xmonad!"
+
+xmonadctl_compile() { \
+    echo "####################################"
+    echo "## Compiling the xmonadctl script ##"
+    echo "####################################"
+    ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
+}
+
+xmonadctl_compile || error "Error compiling the xmonadctl script!"
 
 loginmanager() { \
     dialog --colors --title "\Z5\ZbInstallation Complete!" --msgbox "\Z2Now logout of your current desktop environment or window manager and choose XMonad from your login manager.  ENJOY!" 10 60
-    }
+}
 
-sudo pacman --noconfirm --needed -Sy dialog || error "Error!"
-
-welcome || error "User exited."
-
-lastchance || error "User exited."
-
-for x in "${standardpkgs[@]}"; do
-    dialog --colors --title "Installing packages from Arch repo" --infobox "\Z2Installing \`$x\` from the Arch repositories." 5 70
-    installpkg "$x"
-done
-
-for x in "${directs[@]}"; do
-    dialog --colors --title "Backing up some files and directories" --infobox "\Z2Since \`$HOME/$x\` already exists, we will make a backup at \`$HOME/$x.$(date +%Y%m%d%H%M)\`." 5 70
-    [ -d "$HOME/$x" ] && mv "$HOME/$x" "$HOME/$x.$(date +%Y%m%d%H%M)"
-done
-
-for x in "${confs[@]}"; do
-    dialog --colors --title "Backing up some files and directories" --infobox "\Z2Since \`$HOME/$x\` already exists, we will make a backup at \`$HOME/$x.$(date +%Y%m%d%H%M)\`." 5 70
-    [ -f "$HOME/$x" ] && mv "$HOME/$x" "$HOME/$x.$(date +%Y%m%d%H%M)"
-done
-
-mkdtdots || error "Error making 'dtdots' directory or cd'ing into it."
-
-gitclonedots || error "Error cloning DT's dotfiles or wallpapers repo from GitLab."
-
-for x in "${directs[@]}"; do
-    dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
-    [ -d "$x" ] &&
-    mv "$x" "$HOME/$x"
-done
-
-for x in "${directs[@]}"; do
-    dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
-    [ -d "dotfiles/$x" ] &&
-    mv "dotfiles/$x" "$HOME/$x"
-done
-
-for x in "${confs[@]}"; do
-    dialog --colors --title "Installing the new config files" --infobox "\Z2Copying the new config files to their appropriate locations." 5 70
-    [ -f "dotfiles/$x" ] &&
-    mkdir --parents "$HOME/$(echo "$x" | awk 'BEGIN { FS = "/" } ; { OFS = FS } ; { $NF="" ; print $0 }')" &&
-    mv "dotfiles/$x" "$HOME/$x"
-done
-
-for x in "${aurpkgs[@]}"; do
-    installaur "$x"
-done
-
-sudo mv "$HOME"/.xmonad/pacman-hooks/recompile-xmonad.hook "$HOME"/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
-
-dialog --colors --title "Installing Doom Emacs" --infobox "\Z2A major component of DTOS is Doom Emacs. So let's install it!" 5 70
-sleep 1
-git clone --depth 1 https://github.com/hlissner/doom-emacs "$HOME"/.emacs.d
-"$HOME"/.emacs.d/bin/doom install
-
-xmonad --recompile
-ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
-
-old_home="/home/dt"
-sed -i "s#$old_home#$HOME#g" "$HOME/.config/nitrogen/nitrogen.cfg" "$HOME/.config/nitrogen/bg-saved.cfg"
-
-cd "$HOME" || exit
-rm -rf dtdots
-
-loginmanager || error "User exited."
+loginmanager && echo "DTOS has been installed!"
