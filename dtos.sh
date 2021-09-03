@@ -55,7 +55,7 @@ addkeyserver() { \
     grep -qxF "keyserver hkps://keyserver.ubuntu.com:443" /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkps://keyserver.ubuntu.com:443" | sudo tee -a /etc/pacman.d/gnupg/gpg.conf
 }
 
-addrepo || error "Error adding keyservers to /etc/pacman.d/gnupg/gpg.conf"
+addkeyserver || error "Error adding keyservers to /etc/pacman.d/gnupg/gpg.conf"
 
 receive_key() { \
     echo "#####################################"
