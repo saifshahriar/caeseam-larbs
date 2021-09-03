@@ -41,7 +41,8 @@ addrepo() { \
     echo "#########################################################"
     echo "## Adding the DTOS core repository to /etc/pacman.conf ##"
     echo "#########################################################"
-    grep -qxF "^[dtos-core-repo]" /etc/pacman.conf || echo "[dtos-core-repo]" | sudo tee -a /etc/pacman.conf && echo "SigLevel = Required DatabaseOptional" | sudo tee -a /etc/pacman.conf && echo "Server = https://gitlab.com/dwt1/\$repo/-/raw/main/\$arch" | sudo tee -a /etc/pacman.conf
+    grep -qxF "^[dtos-core-repo]" /etc/pacman.conf ||
+        (echo "[dtos-core-repo]"; echo "SigLevel = Required DatabaseOptional"; echo "Server = https://gitlab.com/dwt1/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
 }
 
 addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
