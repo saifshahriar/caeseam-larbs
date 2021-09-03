@@ -228,13 +228,13 @@ While it would be easier to make packages that could install DTOS configs direct
 
 =NOTE:= The /etc/skel directory contains files and directories that are automatically copied over to a new user's home directory when such user is created by the 'useradd' or the 'adduser' program, depending on your Linux distro.
 #+begin_src bash
-    echo "################################################################"
-    echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##"
-    echo "################################################################"
+echo "################################################################"
+echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##"
+echo "################################################################"
 mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
-[ -d ~/.config ] || mkdir ~/.config && \
-    cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M) && \
-    cp -Rf "/etc/skel/"* ~
+[ -d ~/.config ] && mkdir ~/.config
+[ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
+cp -Rf "/etc/skel/"* ~
 #+end_src
 
 Things we need to make sure we move over from skel:
