@@ -85,6 +85,7 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "dmscripts"
 "dtos-backgrounds"
 "dtos-bash"
+"dtos-conky"
 "dtos-fish"
 "dtos-local-bin"
 "dtos-xmobar"
@@ -162,8 +163,9 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##"
 echo "################################################################"
-mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
-[ -d ~/.config ] && mkdir ~/.config
+[ ! -d /etc/skel ] && sudo mkdir /etc/skel
+[ -d /etc/skel ] && mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
+[ ! -d ~/.config ] && mkdir ~/.config
 [ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
 cd /etc/skel && cp -Rf . ~ && cd -
 

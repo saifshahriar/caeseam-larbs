@@ -149,6 +149,7 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "dmscripts"
 "dtos-backgrounds"
 "dtos-bash"
+"dtos-conky"
 "dtos-fish"
 "dtos-local-bin"
 "dtos-xmobar"
@@ -232,15 +233,12 @@ While it would be easier to make packages that could install DTOS configs direct
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##"
 echo "################################################################"
-mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
-[ -d ~/.config ] && mkdir ~/.config
+[ ! -d /etc/skel ] && sudo mkdir /etc/skel
+[ -d /etc/skel ] && mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
+[ ! -d ~/.config ] && mkdir ~/.config
 [ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
 cd /etc/skel && cp -Rf . ~ && cd -
 #+end_src
-
-Things we need to make sure we move over from skel:
-+ .conkyrc
-+ .Xresources
 
 * Copy pacman hooks
 The following pacman hooks force xmonad to recompile every time there are updates to xmonad or the haskell libraries.
