@@ -132,6 +132,14 @@ sudo pacman --noconfirm --needed -Sy dialog || error "Error syncing the repos."
 * Install the packages from repositories
 All packages listed are either in the standard Arch repos or in the DTOS repos. All of these will be installed using pacman. =NOTE:= The package 'doom-emacs' will be installed using pacman, but because it requires user interaction during the installation process, it is not included in the array below.
 
+=STILL NEED TO PACKAGE:=
++ appimagetool-bin
++ dtos-alacritty
++ dtos-awesome
++ dtos-doom-emacs
++ dtos-qtile
++ movie-monad
+
 #+begin_src bash
 declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "adobe-source-sans-fonts"
@@ -147,15 +155,18 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "dwm-distrotube"
 "dwmblocks-distrotube"
 "dmscripts"
+"dtos-alacritty"
 "dtos-backgrounds"
 "dtos-bash"
 "dtos-conky"
 "dtos-fish"
 "dtos-local-bin"
+"dtos-sxiv"
 "dtos-xmobar"
 "dtos-xmonad"
 "dtos-xwallpaper"
 "dtos-zsh"
+"element-desktop"
 "emacs"
 "exa"
 "fd"
@@ -171,6 +182,8 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "network-manager-applet"
 "opendoas"
 "otf-font-awesome"
+"pacman-contrib"
+"pandoc"
 "paru"
 "pcmanfm"
 "picom"
@@ -195,6 +208,7 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "trayer"
 "vim"
 "volumeicon"
+"xdotool"
 "xf86-video-qxl"
 "xf86-video-intel"
 "xf86-video-amdgpu"
@@ -206,6 +220,9 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "xorg-xkill"
 "xorg-xmessage"
 "xorg-xprop"
+"xorg-xrdb"
+"xorg-xset"
+"xorg-xsetroot"
 "xterm"
 "xwallpaper"
 "yad"
