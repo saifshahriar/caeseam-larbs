@@ -75,7 +75,7 @@ receive_key() { \
 receive_key || error "Error receiving PGP key C71486C31555B12E"
 
 # Let's install each package listed in the pkglist.txt file.
-sudo pacman --noconfirm --needed -S - < pkglist.txt
+sudo pacman --needed -S - < pkglist.txt
 
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775

@@ -157,7 +157,7 @@ All packages listed are either in the standard Arch repos or in the DTOS repos. 
 #+begin_src bash
 
 # Let's install each package listed in the pkglist.txt file.
-sudo pacman --noconfirm --needed -S - < pkglist.txt
+sudo pacman --needed -S - < pkglist.txt
 
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
