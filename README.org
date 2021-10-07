@@ -8,6 +8,7 @@
 - [[#about-dtos][About DTOS]]
 - [[#shebang-plus-comments][Shebang plus comments]]
 - [[#check-that-user-is-not-root][Check that user is NOT root!]]
+- [[#install-dialog][Install 'dialog']]
 - [[#a-function-for-errors][A function for errors]]
 - [[#welcome-message][Welcome message]]
 - [[#asking-user-to-confirm-choice-to-install-dtos][Asking user to confirm choice to install DTOS.]]
@@ -16,7 +17,7 @@
 - [[#receiving-the-pgp-key][Receiving the PGP key]]
 - [[#sync-the-arch-repos][Sync the Arch repos]]
 - [[#install-the-packages-from-repositories][Install the packages from repositories]]
-- [[#copy-configs-over-from-etcskel-into-home][Copy configs over from /etc/skel into $HOME]]
+- [[#copy-configs-over-from-etcdtos-into-home][Copy configs over from /etc/dtos into $HOME]]
 - [[#copy-pacman-hooks][Copy pacman hooks]]
 - [[#compiling-xmonad][Compiling xmonad]]
 - [[#compiling-the-xmonadctl-script][Compiling the xmonadctl script]]
@@ -28,6 +29,14 @@
 [[https://gitlab.com/dwt1/dotfiles/-/raw/master/.screenshots/dtos-thumb-01.png]]
 
 DTOS is the name that I have chosen for my installation script that will deploy my Xmonad config, my Emacs config, as well as associated programs that are needed to create a proper "desktop" experience.  The programs that will be installed include Xmonad, Xmobar, Doom Emacs, Fish and other programs needed to recreate DT's XMonad desktop.
+
+ERRORS NEEDING FIXED:
++ Check if dialog is installed before running script.
++ libxft-bgra does not install with pacman noconfirm because the default answer is N.
++ dtos- packages do not install if the dtos files exist (already owned by another package like bashrc-manjaro, manjaro-zsh-config).
++ We install opendoas but do not have a dtos-doas config.  We need /etc/doas.conf to have the following: permit :wheel
++ dtos-local-bin scripts are not executable when installed to .local/bin
++ Ask if the user wants 'fish' as the default user shell?
 
 * Shebang plus comments
 #+begin_src bash
@@ -41,6 +50,7 @@ DTOS is the name that I have chosen for my installation script that will deploy 
 # NAME: DTOS
 # DESC: An installation and deployment script for DT's Xmonad desktop.
 # WARNING: Run this script at your own risk.
+# DEPENDENCIES: dialog
 
 #+end_src
 * Check that user is NOT root!
@@ -59,6 +69,14 @@ if [ "$(id -u)" = 0 ]; then
 fi
 #+end_src
 
+* Install 'dialog'
+#+begin_src bash
+echo "##############################################################"
+echo "## The 'dialog' program is required for this script to work ##"
+echo "##############################################################"
+sudo pacman --noconfirm --needed -S dialog
+#+end_src
+
 * A function for errors
 #+begin_src bash
 error() { \
@@ -70,7 +88,8 @@ error() { \
 #+begin_src bash
 welcome() { \
     dialog --colors --title "\Z5\ZbInstalling DTOS!" --msgbox "\Z2This is a script that will install what I sarcastically call \Z5DTOS (DT's operating system)\Zn\Z2. It's really just an installation script for those that want to try out my XMonad desktop.  We will add DTOS repos to Pacman and install the XMonad tiling window manager, the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs and many other essential programs needed to make my dotfiles work correctly.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
-    dialog --colors --title "\Z5\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z2This script is not allowed to be run as root. But you will be asked to enter your root password at various points during this installation. This is to give PACMAN the necessary permissions to install the software." 8 60
+    dialog --colors --title "\Z5\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z2This script is not allowed to be run as root. But you will be asked to enter your sudo password at various points during this installation. This is to give PACMAN the necessary permissions to install the software." 8 60
+
 }
 
 welcome || error "User choose to exit."
@@ -134,17 +153,17 @@ All packages listed are either in the standard Arch repos or in the DTOS repos. 
 
 =STILL NEED TO PACKAGE:=
 + appimagetool-bin
-+ dtos-alacritty
++ dtos-opendoas
 + dtos-awesome
 + dtos-doom-emacs
 + dtos-qtile
++ dtos-xresources
 + movie-monad
 
 #+begin_src bash
 declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "adobe-source-sans-fonts"
 "alacritty"
-"awesome"
 "aura"
 "bluez"
 "bluez-utils"
@@ -152,8 +171,6 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "bat"
 "cups"
 "dmenu-distrotube"
-"dwm-distrotube"
-"dwmblocks-distrotube"
 "dmscripts"
 "dtos-alacritty"
 "dtos-backgrounds"
@@ -161,9 +178,11 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "dtos-conky"
 "dtos-fish"
 "dtos-local-bin"
+"dtos-opendoas"
 "dtos-sxiv"
 "dtos-xmobar"
 "dtos-xmonad"
+"dtos-xresources"
 "dtos-xwallpaper"
 "dtos-zsh"
 "element-desktop"
@@ -188,16 +207,13 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "pcmanfm"
 "picom"
 "qalculate-gtk"
-"qtile"
 "qt5ct"
 "qutebrowser"
 "ripgrep"
-"rust"
 "sddm"
 "shell-color-scripts"
 "shellcheck"
 "starship"
-"st-distrotube"
 "stack"
 "sxiv"
 "ttf-hack"
@@ -229,9 +245,12 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "zathura"
 "zsh")
 
-for x in "${dtospkgs[@]}"; do
-    sudo pacman --noconfirm --needed -S "$x"
-done
+# Let's remove libxft since it will conflict with libxft-bgra,
+# and then install each package from the array above.
+sudo pacman -R libxft && sudo pacman --noconfirm --needed -S "${dtospkgs[@]}"
+
+# Change all scripts in .local/bin to be executable.
+find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
 
 echo "#########################################################"
 echo "## Installing Doom Emacs. This may take a few minutes. ##"
@@ -242,26 +261,26 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 #+end_src
 
-* Copy configs over from /etc/skel into $HOME
-While it would be easier to make packages that could install DTOS configs directly to the appropriate places in the $HOME folder, pacman does not allow for this.  Pacman is not allowed to touch $HOME ever!  So instead, all DTOS configs are placed in /etc/skel and then copied over to $HOME.  A backup of config is created. BEWARE!
+* Copy configs over from /etc/dtos into $HOME
+While it would be easier to make packages that could install DTOS configs directly to the appropriate places in the $HOME folder, pacman does not allow for this.  Pacman is not allowed to touch $HOME ever!  The better way to do this is to install the configs in /etc/dtos which is the standard directory to place such config files, but on many distros (for ex. Manjaro and Arco) /etc/dtos is already used to store the distro's own config files.  So to avoid conflicts, all DTOS configs are placed in /etc/dtos and then copied over to $HOME.  A backup of config is created. BEWARE!
 
-=NOTE:= The /etc/skel directory contains files and directories that are automatically copied over to a new user's home directory when such user is created by the 'useradd' or the 'adduser' program, depending on your Linux distro.
+=NOTE:= The /etc/dtos directory contains files and directories that are automatically copied over to a new user's home directory when such user is created by the 'useradd' or the 'adduser' program, depending on your Linux distro.
 #+begin_src bash
 echo "################################################################"
-echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##"
+echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
 echo "################################################################"
-[ ! -d /etc/skel ] && sudo mkdir /etc/skel
-[ -d /etc/skel ] && mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
+[ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
+[ -d /etc/dtos ] && mkdir ~/dtos-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/dtos ~/dtos-backup-$(date +%Y.%m.%d-%H%M)
 [ ! -d ~/.config ] && mkdir ~/.config
 [ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
-cd /etc/skel && cp -Rf . ~ && cd -
+cd /etc/dtos && cp -Rf . ~ && cd -
 #+end_src
 
 * Copy pacman hooks
 The following pacman hooks force xmonad to recompile every time there are updates to xmonad or the haskell libraries.
 #+begin_src bash
-cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
-cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
+cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
+cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
 #+end_src
 
 * Compiling xmonad

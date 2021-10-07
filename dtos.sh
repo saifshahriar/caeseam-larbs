@@ -8,6 +8,7 @@
 # NAME: DTOS
 # DESC: An installation and deployment script for DT's Xmonad desktop.
 # WARNING: Run this script at your own risk.
+# DEPENDENCIES: dialog
 
 if [ "$(id -u)" = 0 ]; then
     echo "##################################################################"
@@ -20,13 +21,19 @@ if [ "$(id -u)" = 0 ]; then
     exit 1
 fi
 
+echo "##############################################################"
+echo "## The 'dialog' program is required for this script to work ##"
+echo "##############################################################"
+sudo pacman --noconfirm --needed -S dialog
+
 error() { \
     clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
 }
 
 welcome() { \
     dialog --colors --title "\Z5\ZbInstalling DTOS!" --msgbox "\Z2This is a script that will install what I sarcastically call \Z5DTOS (DT's operating system)\Zn\Z2. It's really just an installation script for those that want to try out my XMonad desktop.  We will add DTOS repos to Pacman and install the XMonad tiling window manager, the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs and many other essential programs needed to make my dotfiles work correctly.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
-    dialog --colors --title "\Z5\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z2This script is not allowed to be run as root. But you will be asked to enter your root password at various points during this installation. This is to give PACMAN the necessary permissions to install the software." 8 60
+    dialog --colors --title "\Z5\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z2This script is not allowed to be run as root. But you will be asked to enter your sudo password at various points during this installation. This is to give PACMAN the necessary permissions to install the software." 8 60
+
 }
 
 welcome || error "User choose to exit."
@@ -72,7 +79,6 @@ sudo pacman --noconfirm --needed -Sy dialog || error "Error syncing the repos."
 declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "adobe-source-sans-fonts"
 "alacritty"
-"awesome"
 "aura"
 "bluez"
 "bluez-utils"
@@ -80,8 +86,6 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "bat"
 "cups"
 "dmenu-distrotube"
-"dwm-distrotube"
-"dwmblocks-distrotube"
 "dmscripts"
 "dtos-alacritty"
 "dtos-backgrounds"
@@ -89,9 +93,11 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "dtos-conky"
 "dtos-fish"
 "dtos-local-bin"
+"dtos-opendoas"
 "dtos-sxiv"
 "dtos-xmobar"
 "dtos-xmonad"
+"dtos-xresources"
 "dtos-xwallpaper"
 "dtos-zsh"
 "element-desktop"
@@ -116,16 +122,13 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "pcmanfm"
 "picom"
 "qalculate-gtk"
-"qtile"
 "qt5ct"
 "qutebrowser"
 "ripgrep"
-"rust"
 "sddm"
 "shell-color-scripts"
 "shellcheck"
 "starship"
-"st-distrotube"
 "stack"
 "sxiv"
 "ttf-hack"
@@ -157,9 +160,12 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "zathura"
 "zsh")
 
-for x in "${dtospkgs[@]}"; do
-    sudo pacman --noconfirm --needed -S "$x"
-done
+# Let's remove libxft since it will conflict with libxft-bgra,
+# and then install each package from the array above.
+sudo pacman -R libxft && sudo pacman --noconfirm --needed -S "${dtospkgs[@]}"
+
+# Change all scripts in .local/bin to be executable.
+find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
 
 echo "#########################################################"
 echo "## Installing Doom Emacs. This may take a few minutes. ##"
@@ -170,16 +176,16 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 
 echo "################################################################"
-echo "## Copying DTOS configuration files from /etc/skel into \$HOME ##"
+echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
 echo "################################################################"
-[ ! -d /etc/skel ] && sudo mkdir /etc/skel
-[ -d /etc/skel ] && mkdir ~/skel-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/skel ~/skel-backup-$(date +%Y.%m.%d-%H%M)
+[ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
+[ -d /etc/dtos ] && mkdir ~/dtos-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/dtos ~/dtos-backup-$(date +%Y.%m.%d-%H%M)
 [ ! -d ~/.config ] && mkdir ~/.config
 [ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
-cd /etc/skel && cp -Rf . ~ && cd -
+cd /etc/dtos && cp -Rf . ~ && cd -
 
-cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
-cp /etc/skel/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
+cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
+cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
 
 xmonad_recompile() { \
     echo "########################"
