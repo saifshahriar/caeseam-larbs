@@ -241,10 +241,11 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 
 # Let's remove libxft since it will conflict with libxft-bgra,
 # and then install each package from the array above.
-sudo pacman -R libxft
-for x in "${dtospkgs[@]}"; do
-    sudo pacman --noconfirm --needed -S "$x"
-done
+sudo pacman -R libxft && sudo pacman --noconfirm --needed -S "${dtospkgs[*]}"
+
+#for x in "${dtospkgs[@]}"; do
+#    sudo pacman --noconfirm --needed -S "$x"
+#done
 
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
