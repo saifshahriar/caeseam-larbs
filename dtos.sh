@@ -21,10 +21,10 @@ if [ "$(id -u)" = 0 ]; then
     exit 1
 fi
 
-echo "##############################################################"
-echo "## The 'dialog' program is required for this script to work ##"
-echo "##############################################################"
-sudo pacman --noconfirm --needed -S dialog
+echo "################################################################"
+echo "## Syncing the repos and installing 'dialog' if not installed ##"
+echo "################################################################"
+sudo pacman --noconfirm --needed -Sy dialog || error "Error syncing the repos."
 
 error() { \
     clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
@@ -73,8 +73,6 @@ receive_key() { \
 }
 
 receive_key || error "Error receiving PGP key C71486C31555B12E"
-
-sudo pacman --noconfirm --needed -Sy dialog || error "Error syncing the repos."
 
 declare -a dtospkgs=("adobe-source-code-pro-fonts"
 "adobe-source-sans-fonts"
@@ -162,7 +160,10 @@ declare -a dtospkgs=("adobe-source-code-pro-fonts"
 
 # Let's remove libxft since it will conflict with libxft-bgra,
 # and then install each package from the array above.
-sudo pacman -R libxft && sudo pacman --noconfirm --needed -S "${dtospkgs[@]}"
+sudo pacman -R libxft
+for x in "${dtospkgs[@]}"; do
+    sudo pacman --noconfirm --needed -S "$x"
+done
 
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
