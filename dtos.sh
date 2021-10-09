@@ -144,7 +144,9 @@ select choice in "${shells[@]}"; do
 	          echo "User requested exit"
 	          exit
 	          ;;
-         *) echo "invalid option $REPLY";;
+         *)
+            echo "invalid option $REPLY"
+            ;;
     esac
 done
 
