@@ -6,6 +6,7 @@
 
 * TABLE OF CONTENT :toc:
 - [[#about-dtos][About DTOS]]
+- [[#features-to-add-in-the-future][Features to add in the future:]]
 - [[#shebang-plus-comments][Shebang plus comments]]
 - [[#check-that-user-is-not-root][Check that user is NOT root!]]
 - [[#sync-the-repos-and-install-dialog][Sync the repos and install 'dialog']]
@@ -20,6 +21,7 @@
 - [[#copy-pacman-hooks][Copy pacman hooks]]
 - [[#compiling-xmonad][Compiling xmonad]]
 - [[#compiling-the-xmonadctl-script][Compiling the xmonadctl script]]
+- [[#set-default-user-shell][Set default USER shell]]
 - [[#message-stating-that-the-installation-is-complete][Message stating that the installation is complete!]]
 
 * About DTOS
@@ -29,12 +31,7 @@
 
 DTOS is the name that I have chosen for my installation script that will deploy my Xmonad config, my Emacs config, as well as associated programs that are needed to create a proper "desktop" experience.  The programs that will be installed include Xmonad, Xmobar, Doom Emacs, Fish and other programs needed to recreate DT's XMonad desktop.
 
-ERRORS NEEDING FIXED:
-+ Check if dialog is installed before running script.
-+ libxft-bgra does not install with pacman noconfirm because the default answer is N.
-+ dtos- packages do not install if the dtos files exist (already owned by another package like bashrc-manjaro, manjaro-zsh-config).
-+ We install opendoas but do not have a dtos-doas config.  We need /etc/doas.conf to have the following: permit :wheel
-+ dtos-local-bin scripts are not executable when installed to .local/bin
+* Features to add in the future:
 + Ask if the user wants 'fish' as the default user shell?
 
 * Shebang plus comments
@@ -218,6 +215,37 @@ xmonadctl_compile() { \
 xmonadctl_compile || error "Error compiling the xmonadctl script!"
 #+end_src
 
+* Set default USER shell
+#+begin_src bash
+PS3='Set default user shell: '
+shells=("Fish" "Bash" "Zsh" "Quit")
+select choice in "${shells[@]}"; do
+    case $choice in
+        "Fish")
+            sudo chsh $USER -s /bin/fish && \
+            echo "$choice has been set as your default USER shell.\n
+                  Logging out is required for this take effect."
+            ;;
+        "Bash")
+            sudo chsh $USER -s /bin/bash && \
+            echo "$choice has been set as your default USER shell.\n
+                  Logging out is required for this take effect."
+            ;;
+        "Zsh")
+            sudo chsh $USER -s /bin/zsh && \
+            echo "$choice has been set as your default USER shell.\n
+                  Logging out is required for this take effect."
+	          break
+            ;;
+        "Quit")
+	          echo "User requested exit"
+	          exit
+	          ;;
+         ,*) echo "invalid option $REPLY";;
+    esac
+done
+
+#+end_src
 * Message stating that the installation is complete!
 #+begin_src bash
 loginmanager() { \

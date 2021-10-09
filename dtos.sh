@@ -118,6 +118,34 @@ xmonadctl_compile() { \
 
 xmonadctl_compile || error "Error compiling the xmonadctl script!"
 
+PS3='Set default user shell: '
+shells=("Fish" "Bash" "Zsh" "Quit")
+select choice in "${shells[@]}"; do
+    case $choice in
+        "Fish")
+            sudo chsh $USER -s /bin/fish && \
+            echo "$choice has been set as your default USER shell.\n
+                  Logging out is required for this take effect."
+            ;;
+        "Bash")
+            sudo chsh $USER -s /bin/bash && \
+            echo "$choice has been set as your default USER shell.\n
+                  Logging out is required for this take effect."
+            ;;
+        "Zsh")
+            sudo chsh $USER -s /bin/zsh && \
+            echo "$choice has been set as your default USER shell.\n
+                  Logging out is required for this take effect."
+	          break
+            ;;
+        "Quit")
+	          echo "User requested exit"
+	          exit
+	          ;;
+         *) echo "invalid option $REPLY";;
+    esac
+done
+
 loginmanager() { \
     dialog --colors --title "\Z5\ZbInstallation Complete!" --msgbox "\Z2Now logout of your current desktop environment or window manager and choose XMonad from your login manager.  ENJOY!" 10 60
 }
