@@ -9,8 +9,8 @@
 - [[#features-to-add-in-the-future][Features to add in the future:]]
 - [[#shebang-plus-comments][Shebang plus comments]]
 - [[#check-that-user-is-not-root][Check that user is NOT root!]]
-- [[#sync-the-repos-and-install-dialog][Sync the repos and install 'dialog']]
 - [[#a-function-for-errors][A function for errors]]
+- [[#sync-the-repos-and-install-dialog][Sync the repos and install 'dialog']]
 - [[#welcome-message][Welcome message]]
 - [[#asking-user-to-confirm-choice-to-install-dtos][Asking user to confirm choice to install DTOS.]]
 - [[#adding-dtos-repo-to-pacmanconf][Adding DTOS repo to pacman.conf.]]
@@ -41,7 +41,10 @@ ParallelDownloads = 5
 
 
 * Features to add in the future:
-+ Ask if the user wants 'fish' as the default user shell?
++ Setting USER's shell is broken; stuck in a loop for some reason.
++ Copying the pacman hooks does not work if /etc/pacman.d/hooks does not exist.
++ Fix doom-emacs keybinding in xmonad.
++ Create dtos-doom for custom Doom config.
 
 * Shebang plus comments
 #+begin_src bash
@@ -74,19 +77,19 @@ if [ "$(id -u)" = 0 ]; then
 fi
 #+end_src
 
+* A function for errors
+#+begin_src bash
+error() { \
+    clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
+}
+#+end_src
+
 * Sync the repos and install 'dialog'
 #+begin_src bash
 echo "################################################################"
 echo "## Syncing the repos and installing 'dialog' if not installed ##"
 echo "################################################################"
 sudo pacman --noconfirm --needed -Sy dialog || error "Error syncing the repos."
-#+end_src
-
-* A function for errors
-#+begin_src bash
-error() { \
-    clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
-}
 #+end_src
 
 * Welcome message
@@ -167,7 +170,7 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 #+end_src
 
 * Copy configs over from /etc/dtos into $HOME
-While it would be easier to make packages that could install DTOS configs directly to the appropriate places in the $HOME folder, pacman does not allow for this.  Pacman is not allowed to touch $HOME ever!  The better way to do this is to install the configs in /etc/dtos which is the standard directory to place such config files, but on many distros (for ex. Manjaro and Arco) /etc/dtos is already used to store the distro's own config files.  So to avoid conflicts, all DTOS configs are placed in /etc/dtos and then copied over to $HOME.  A backup of config is created. BEWARE!
+While it would be easier to make packages that could install DTOS configs directly to the appropriate places in the $HOME folder, pacman does not allow for this.  Pacman is not allowed to touch $HOME ever!  The better way to do this is to install the configs in /etc/skel which is the standard directory to place such config files, but on many distros (for ex. Manjaro and Arco) /etc/skel is already used to store the distro's own config files.  So to avoid conflicts, all DTOS configs are placed in /etc/dtos and then copied over to $HOME.  A backup of config is created.  BEWARE!
 
 =NOTE:= The /etc/dtos directory contains files and directories that are automatically copied over to a new user's home directory when such user is created by the 'useradd' or the 'adduser' program, depending on your Linux distro.
 #+begin_src bash
@@ -238,7 +241,6 @@ select choice in "${shells[@]}"; do
             sudo chsh $USER -s /bin/zsh && \
             echo "$choice has been set as your default USER shell.\n
                   Logging out is required for this take effect."
-	          break
             ;;
          quit)
 	          echo "User requested exit"

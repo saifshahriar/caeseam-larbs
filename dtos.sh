@@ -21,14 +21,14 @@ if [ "$(id -u)" = 0 ]; then
     exit 1
 fi
 
+error() { \
+    clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
+}
+
 echo "################################################################"
 echo "## Syncing the repos and installing 'dialog' if not installed ##"
 echo "################################################################"
 sudo pacman --noconfirm --needed -Sy dialog || error "Error syncing the repos."
-
-error() { \
-    clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
-}
 
 welcome() { \
     dialog --colors --title "\Z5\ZbInstalling DTOS!" --msgbox "\Z2This is a script that will install what I sarcastically call \Z5DTOS (DT's operating system)\Zn\Z2. It's really just an installation script for those that want to try out my XMonad desktop.  We will add DTOS repos to Pacman and install the XMonad tiling window manager, the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs and many other essential programs needed to make my dotfiles work correctly.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
@@ -138,7 +138,6 @@ select choice in "${shells[@]}"; do
             sudo chsh $USER -s /bin/zsh && \
             echo "$choice has been set as your default USER shell.\n
                   Logging out is required for this take effect."
-	          break
             ;;
          quit)
 	          echo "User requested exit"
