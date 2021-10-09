@@ -121,26 +121,26 @@ xmonadctl_compile() { \
 xmonadctl_compile || error "Error compiling the xmonadctl script!"
 
 PS3='Set default user shell: '
-shells=("Fish" "Bash" "Zsh" "Quit")
+shells=("fish" "bash" "zsh" "quit")
 select choice in "${shells[@]}"; do
     case $choice in
-        "Fish")
+        "fish")
             sudo chsh $USER -s /bin/fish && \
             echo "$choice has been set as your default USER shell.\n
                   Logging out is required for this take effect."
             ;;
-        "Bash")
+        "bash")
             sudo chsh $USER -s /bin/bash && \
             echo "$choice has been set as your default USER shell.\n
                   Logging out is required for this take effect."
             ;;
-        "Zsh")
+        "zsh")
             sudo chsh $USER -s /bin/zsh && \
             echo "$choice has been set as your default USER shell.\n
                   Logging out is required for this take effect."
 	          break
             ;;
-        "Quit")
+        "quit")
 	          echo "User requested exit"
 	          exit
 	          ;;
