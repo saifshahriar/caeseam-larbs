@@ -31,6 +31,15 @@
 
 DTOS is the name that I have chosen for my installation script that will deploy my Xmonad config, my Emacs config, as well as associated programs that are needed to create a proper "desktop" experience.  The programs that will be installed include Xmonad, Xmobar, Doom Emacs, Fish and other programs needed to recreate DT's XMonad desktop.
 
+=NOTE:= This script can take a long time to complete since it will install more than 300 packages.  Make sure that ParallelDownloads is enabled in your pacman.conf for faster download times!
+
+#+begin_example
+In /etc/pacman.conf...
+
+ParallelDownloads = 5
+#+end_example
+
+
 * Features to add in the future:
 + Ask if the user wants 'fish' as the default user shell?
 
