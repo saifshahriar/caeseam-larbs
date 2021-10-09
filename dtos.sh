@@ -32,13 +32,15 @@ error() { \
 
 welcome() { \
     dialog --colors --title "\Z5\ZbInstalling DTOS!" --msgbox "\Z2This is a script that will install what I sarcastically call \Z5DTOS (DT's operating system)\Zn\Z2. It's really just an installation script for those that want to try out my XMonad desktop.  We will add DTOS repos to Pacman and install the XMonad tiling window manager, the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs and many other essential programs needed to make my dotfiles work correctly.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
-    dialog --colors --title "\Z5\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z2This script is not allowed to be run as root. But you will be asked to enter your sudo password at various points during this installation. This is to give PACMAN the necessary permissions to install the software." 8 60
 
+    dialog --colors --title "\Z5\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z2This script is not allowed to be run as root. But you will be asked to enter your sudo password at various points during this installation. This is to give PACMAN the necessary permissions to install the software." 8 60
 }
 
 welcome || error "User choose to exit."
 
 lastchance() { \
+    dialog --colors --title "\Z5\ZbInstalling DTOS!" --msgbox "\Z2WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
+
     dialog --colors --title "\Z5\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z2Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
 }
 
