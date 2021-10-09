@@ -142,17 +142,7 @@ receive_key || error "Error receiving PGP key C71486C31555B12E"
 * Install the packages from repositories
 All packages listed are either in the standard Arch repos or in the DTOS repos. All of these will be installed using pacman. =NOTE:= The package 'doom-emacs' will be installed using pacman, but because it requires user interaction during the installation process, it is not included in the array below.
 
-=STILL NEED TO PACKAGE:=
-+ appimagetool-bin
-+ dtos-opendoas
-+ dtos-awesome
-+ dtos-doom-emacs
-+ dtos-qtile
-+ dtos-xresources
-+ movie-monad
-
 #+begin_src bash
-
 # Let's install each package listed in the pkglist.txt file.
 sudo pacman --needed -S - < pkglist.txt
 
