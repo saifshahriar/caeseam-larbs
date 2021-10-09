@@ -79,9 +79,6 @@ receive_key || error "Error receiving PGP key C71486C31555B12E"
 # Let's install each package listed in the pkglist.txt file.
 sudo pacman --needed -S - < pkglist.txt
 
-# Change all scripts in .local/bin to be executable.
-find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
-
 echo "#########################################################"
 echo "## Installing Doom Emacs. This may take a few minutes. ##"
 echo "#########################################################"
@@ -98,6 +95,9 @@ echo "################################################################"
 [ ! -d ~/.config ] && mkdir ~/.config
 [ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
 cd /etc/dtos && cp -Rf . ~ && cd -
+
+# Change all scripts in .local/bin to be executable.
+find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
 
 cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
 cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
