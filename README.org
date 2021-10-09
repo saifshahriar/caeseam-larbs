@@ -41,8 +41,6 @@ ParallelDownloads = 5
 
 
 * Features to add in the future:
-+ Setting USER's shell is broken; stuck in a loop for some reason.
-+ Copying the pacman hooks does not work if /etc/pacman.d/hooks does not exist.
 + Fix doom-emacs keybinding in xmonad.
 + Create dtos-doom for custom Doom config.
 
@@ -192,6 +190,7 @@ find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
 * Copy pacman hooks
 The following pacman hooks force xmonad to recompile every time there are updates to xmonad or the haskell libraries.
 #+begin_src bash
+[ ! -d /etc/dtos ] && sudo mkdir /etc/pacman.d/hooks
 cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
 cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
 #+end_src
@@ -229,22 +228,22 @@ select choice in "${shells[@]}"; do
     case $choice in
          fish)
             sudo chsh $USER -s /bin/fish && \
-            echo "$choice has been set as your default USER shell.\n
-                  Logging out is required for this take effect."
+            echo -e "$choice has been set as your default USER shell. \nLogging out is required for this take effect."
+            break
             ;;
          bash)
             sudo chsh $USER -s /bin/bash && \
-            echo "$choice has been set as your default USER shell.\n
-                  Logging out is required for this take effect."
+            echo -e "$choice has been set as your default USER shell. \nLogging out is required for this take effect."
+            break
             ;;
          zsh)
             sudo chsh $USER -s /bin/zsh && \
-            echo "$choice has been set as your default USER shell.\n
-                  Logging out is required for this take effect."
+            echo -e "$choice has been set as your default USER shell. \nLogging out is required for this take effect."
+            break
             ;;
          quit)
 	          echo "User requested exit"
-	          exit
+	          break
 	          ;;
          *)
             echo "invalid option $REPLY"

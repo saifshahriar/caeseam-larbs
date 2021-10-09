@@ -99,6 +99,7 @@ cd /etc/dtos && cp -Rf . ~ && cd -
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
 
+[ ! -d /etc/dtos ] && sudo mkdir /etc/pacman.d/hooks
 cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
 cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
 
@@ -126,22 +127,22 @@ select choice in "${shells[@]}"; do
     case $choice in
          fish)
             sudo chsh $USER -s /bin/fish && \
-            echo "$choice has been set as your default USER shell.\n
-                  Logging out is required for this take effect."
+            echo -e "$choice has been set as your default USER shell. \nLogging out is required for this take effect."
+            break
             ;;
          bash)
             sudo chsh $USER -s /bin/bash && \
-            echo "$choice has been set as your default USER shell.\n
-                  Logging out is required for this take effect."
+            echo -e "$choice has been set as your default USER shell. \nLogging out is required for this take effect."
+            break
             ;;
          zsh)
             sudo chsh $USER -s /bin/zsh && \
-            echo "$choice has been set as your default USER shell.\n
-                  Logging out is required for this take effect."
+            echo -e "$choice has been set as your default USER shell. \nLogging out is required for this take effect."
+            break
             ;;
          quit)
 	          echo "User requested exit"
-	          exit
+	          break
 	          ;;
          *)
             echo "invalid option $REPLY"
