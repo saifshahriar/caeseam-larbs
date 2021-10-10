@@ -21,7 +21,9 @@ if [ "$(id -u)" = 0 ]; then
     exit 1
 fi
 
-error() { \
+error() { \        , ("C-e b", spawn (myEmacs ++ ("--eval '(ibuffer)'")))   -- list buffers
+        , ("C-e d", spawn (myEmacs ++ ("--eval '(dired nil)'"))) -- dired
+
     clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
 }
 
@@ -99,7 +101,7 @@ cd /etc/dtos && cp -Rf . ~ && cd -
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
 
-[ ! -d /etc/dtos ] && sudo mkdir /etc/pacman.d/hooks
+[ ! -d /etc/pacman.d/hooks ] && sudo mkdir /etc/pacman.d/hooks
 cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
 cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
 
@@ -141,9 +143,9 @@ select choice in "${shells[@]}"; do
             break
             ;;
          quit)
-	          echo "User requested exit"
-	          break
-	          ;;
+            echo "User requested exit"
+            break
+            ;;
          *)
             echo "invalid option $REPLY"
             ;;
