@@ -41,7 +41,8 @@ ParallelDownloads = 5
 #+end_example
 
 * Features to add in the future:
-+ Sddm is installed but we don't enable it, because most distros already have a login manager. We should let base Arch installers know that sddm is installed and needs to be enabled.
++ Sddm is installed but we don't enable it, because most distros already have a login manager.  But I'd like to disable the currently enabled login manager and enable sddm.
++ To fix Doom Emacs not launching correctly on first attempt: killall emacs && /usr/bin/emacs --daemon &
 
 * Shebang plus comments
 #+begin_src bash
