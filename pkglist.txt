@@ -13,6 +13,7 @@ dtos-alacritty
 dtos-backgrounds
 dtos-bash
 dtos-conky
+dtos-doom
 dtos-fish
 dtos-local-bin
 dtos-opendoas
