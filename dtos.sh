@@ -77,7 +77,7 @@ receive_key() { \
 receive_key || error "Error receiving PGP key C71486C31555B12E"
 
 # Let's install each package listed in the pkglist.txt file.
-sudo pacman --needed -S - < pkglist.txt
+sudo pacman --needed -Sy - < pkglist.txt
 
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"

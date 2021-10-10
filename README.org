@@ -158,7 +158,7 @@ All packages listed are either in the standard Arch repos or in the DTOS repos. 
 
 #+begin_src bash
 # Let's install each package listed in the pkglist.txt file.
-sudo pacman --needed -S - < pkglist.txt
+sudo pacman --needed -Sy - < pkglist.txt
 #+end_src
 
 * Copy configs over from /etc/dtos into $HOME
