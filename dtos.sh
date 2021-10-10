@@ -121,11 +121,6 @@ xmonadctl_compile() { \
 
 xmonadctl_compile || error "Error compiling the xmonadctl script!"
 
-# Disable the current login manager
-sudo systemctl disable $(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}')
-# Enable sddm as login manager
-sudo systemctl enable --now sddm
-
 PS3='Set default user shell (enter number): '
 shells=("fish" "bash" "zsh" "quit")
 select choice in "${shells[@]}"; do

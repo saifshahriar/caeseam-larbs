@@ -22,7 +22,6 @@
 - [[#copy-pacman-hooks][Copy pacman hooks]]
 - [[#compiling-xmonad][Compiling xmonad]]
 - [[#compiling-the-xmonadctl-script][Compiling the xmonadctl script]]
-- [[#enable-sddm-for-login-manager][Enable SDDM for login manager]]
 - [[#set-default-user-shell][Set default USER shell]]
 - [[#message-stating-that-the-installation-is-complete][Message stating that the installation is complete!]]
 
@@ -221,16 +220,6 @@ xmonadctl_compile() { \
 }
 
 xmonadctl_compile || error "Error compiling the xmonadctl script!"
-#+end_src
-
-* Enable SDDM for login manager
-Disable the currently enabled display manager and enable SDDM instead.
-
-#+begin_src bash
-# Disable the current login manager
-sudo systemctl disable $(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}')
-# Enable sddm as login manager
-sudo systemctl enable --now sddm
 #+end_src
 
 * Set default USER shell
