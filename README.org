@@ -41,10 +41,7 @@ ParallelDownloads = 5
 #+end_example
 
 * Features to add in the future:
-+ Setting USER's shell is broken; stuck in a loop for some reason.
-+ Copying the pacman hooks does not work if /etc/pacman.d/hooks does not exist.
-+ Fix doom-emacs keybinding in xmonad.
-+ Create dtos-doom for custom Doom config.
++ Sddm is installed but we don't enable it, because most distros already have a login manager. We should let base Arch installers know that sddm is installed and needs to be enabled.
 
 * Shebang plus comments
 #+begin_src bash
