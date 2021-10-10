@@ -79,14 +79,6 @@ receive_key || error "Error receiving PGP key C71486C31555B12E"
 # Let's install each package listed in the pkglist.txt file.
 sudo pacman --needed -S - < pkglist.txt
 
-echo "#########################################################"
-echo "## Installing Doom Emacs. This may take a few minutes. ##"
-echo "#########################################################"
-[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
-[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
-git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom install
-
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
 echo "################################################################"
@@ -98,6 +90,14 @@ cd /etc/dtos && cp -Rf . ~ && cd -
 
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
+
+echo "#########################################################"
+echo "## Installing Doom Emacs. This may take a few minutes. ##"
+echo "#########################################################"
+[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
+[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom install
 
 [ ! -d /etc/pacman.d/hooks ] && sudo mkdir /etc/pacman.d/hooks
 cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
