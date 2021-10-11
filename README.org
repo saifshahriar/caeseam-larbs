@@ -45,8 +45,7 @@ ParallelDownloads = 5
 + To fix Doom Emacs not launching correctly on first attempt: killall emacs && /usr/bin/emacs --daemon &
 
 * Shebang plus comments
-#+begin_src bash
-#!/usr/bin/env bash
+#+begin_src bash :shebang "#!/usr/bin/env bash"
 #  ____ _____ ___  ____
 # |  _ \_   _/ _ \/ ___|   Derek Taylor (DistroTube)
 # | | | || || | | \___ \   http://www.youtube.com/c/DistroTube
