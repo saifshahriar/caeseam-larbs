@@ -52,7 +52,6 @@ cd dtos/
 ** IMPORTANT: You must answer YES to all YES/NO questions
 You will be asked several =yes/no= questions:
 + Pacman will ask you if you want to replace libxft with libxft-bgra.
-+ Pacman may ask you about other package conflicts as well.
 + Doom Emacs will ask about creating an envar file, and...
 + Doom will also ask about installing all-the-icons fonts.
 

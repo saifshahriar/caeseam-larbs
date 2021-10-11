@@ -41,7 +41,6 @@ opendoas
 otf-font-awesome
 pacman-contrib
 pandoc
-paru
 pcmanfm
 picom
 qalculate-gtk
@@ -79,6 +78,5 @@ xorg-xset
 xorg-xsetroot
 xterm
 xwallpaper
-yad
 zathura
 zsh
