@@ -153,7 +153,7 @@ select choice in "${shells[@]}"; do
             break
             ;;
          quit)
-            echo "User requested exit"
+            echo "User quit without changing shell."
             break
             ;;
          *)
