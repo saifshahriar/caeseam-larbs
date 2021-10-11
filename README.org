@@ -92,9 +92,21 @@ sudo pacman --noconfirm --needed -Sy dialog || error "Error syncing the repos."
 * Welcome message
 #+begin_src bash
 welcome() { \
-    dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4This is a script that will install what I sarcastically call DTOS (DT's operating system).  It's really just an installation script for those that want to try out my XMonad desktop.  We will add DTOS repos to Pacman and install the XMonad tiling window manager, the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs and many other essential programs needed to make my dotfiles work correctly.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
+    dialog --colors --title "\Z7\ZbInstalling DTOS!" \
+    --msgbox "\Z4This is a script that will install what I sarcastically call DTOS (DT's operating system). \
+                It's really just an installation script for those that want to try out my XMonad desktop. \
+                We will add DTOS repos to Pacman and install the XMonad tiling window manager, \
+                the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs \
+                and many other essential programs needed to make my dotfiles work correctly. \
+                \\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
 
-    dialog --colors --title "\Z7\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z4This script is not allowed to be run as root, but you will be asked to enter your sudo password at various points during this installation. This is to give PACMAN the necessary permissions to install the software.  So stay near the computer." 8 60
+    dialog --colors --title "\Z7\ZbStay near your computer!" \
+    --yes-label "Continue" \
+    --no-label "Exit" \
+    --yesno "\Z4This script is not allowed to be run as root, \
+            but you will be asked to enter your sudo password at various points during this installation. \
+            This is to give PACMAN the necessary permissions to install the software. \
+            So stay near the computer." 8 60
 }
 
 welcome || error "User choose to exit."
@@ -103,9 +115,16 @@ welcome || error "User choose to exit."
 * Asking user to confirm choice to install DTOS.
 #+begin_src bash
 lastchance() { \
-    dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
+    dialog --colors --title "\Z7\ZbInstalling DTOS!" \
+    --msgbox "\Z4WARNING! The DTOS installation script is currently in public beta testing. \
+    There are almost certainly errors in it; \
+    therefore, it is strongly recommended that you DO NOT install this on production machines. \
+    It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
 
-    dialog --colors --title "\Z7\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z4Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
+    dialog --colors --title "\Z7\ZbAre You Sure You Want To Do This?" \
+    --yes-label "Begin Installation" \
+    --no-label "Exit" \
+    --yesno "\Z4Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
 }
 
 lastchance || error "User choose to exit."
@@ -118,7 +137,8 @@ addrepo() { \
     echo "## Adding the DTOS core repository to /etc/pacman.conf ##"
     echo "#########################################################"
     grep -qxF "[dtos-core-repo]" /etc/pacman.conf ||
-        (echo "[dtos-core-repo]"; echo "SigLevel = Required DatabaseOptional"; echo "Server = https://gitlab.com/dwt1/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
+        (echo "[dtos-core-repo]"; echo "SigLevel = Required DatabaseOptional"; \
+        echo "Server = https://gitlab.com/dwt1/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
 }
 
 addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
@@ -140,14 +160,15 @@ addkeyserver || error "Error adding keyservers to /etc/pacman.d/gnupg/gpg.conf"
 * Receiving the PGP key
 #+begin_src bash
 receive_key() { \
+    local _pgpkey="C71486C31555B12E"
     echo "#####################################"
-    echo "## Adding PGP key C71486C31555B12E ##"
+    echo "## Adding PGP key $_pgpkey ##"
     echo "#####################################"
-    sudo pacman-key --recv-key C71486C31555B12E
-    sudo pacman-key --lsign-key C71486C31555B12E
+    sudo pacman-key --recv-key $_pgpkey
+    sudo pacman-key --lsign-key $_pgpkey
 }
 
-receive_key || error "Error receiving PGP key C71486C31555B12E"
+receive_key || error "Error receiving PGP key $_pgpkey"
 #+end_src
 
 * Install the packages from repositories
@@ -228,19 +249,10 @@ PS3='Set default user shell (enter number): '
 shells=("fish" "bash" "zsh" "quit")
 select choice in "${shells[@]}"; do
     case $choice in
-         fish)
-            sudo chsh $USER -s /bin/fish && \
-            echo -e "$choice has been set as your default USER shell. \nLogging out is required for this take effect."
-            break
-            ;;
-         bash)
-            sudo chsh $USER -s /bin/bash && \
-            echo -e "$choice has been set as your default USER shell. \nLogging out is required for this take effect."
-            break
-            ;;
-         zsh)
-            sudo chsh $USER -s /bin/zsh && \
-            echo -e "$choice has been set as your default USER shell. \nLogging out is required for this take effect."
+         fish | bash | zsh)
+            sudo chsh $USER -s "/bin/$choice" && \
+            echo -e "$choice has been set as your default USER shell. \
+                    \nLogging out is required for this take effect."
             break
             ;;
          quit)
@@ -252,12 +264,15 @@ select choice in "${shells[@]}"; do
             ;;
     esac
 done
-
 #+end_src
+
 * Message stating that the installation is complete!
 #+begin_src bash
 loginmanager() { \
-    dialog --colors --title "\Z5\ZbInstallation Complete!" --msgbox "\Z2Now logout of your current desktop environment or window manager and choose XMonad from your login manager.  ENJOY!" 10 60
+    dialog --colors --title "\Z5\ZbInstallation Complete!" \
+    --msgbox "\Z2Now logout of your current desktop environment \
+                or window manager and choose XMonad from your login manager. \
+                ENJOY!" 10 60
 }
 
 loginmanager && echo "DTOS has been installed!"
