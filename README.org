@@ -8,6 +8,7 @@
 - [[#about-dtos][About DTOS]]
 - [[#installing-dtos][Installing DTOS]]
   - [[#installation-instructions][Installation instructions]]
+  - [[#you-must-answer-some-yesno-questions][You must answer some YES/NO questions]]
   - [[#potential-bugs][Potential bugs]]
 - [[#contributing-to-dtos][Contributing to DTOS]]
   - [[#edit-readmeorg][Edit README.org]]
@@ -47,6 +48,10 @@ git clone https://gitlab.com/dwt1/dtos
 cd dtos/
 ./dtos.sh
 #+end_example
+
+** You must answer some YES/NO questions
+You will be asked several =yes/no= questions.  During package installation, pacman will ask you if you want to replace libxft with libxft-bgra.  You must answer YES (y) to this question, or some of the software that will get installed may not work correctly.  During the Doom Emacs part of the installation script, you will be asked two =yes/no= questions.  Answer YES (y) to both questions.
+
 ** Potential bugs
 *** Permission errors
 If you get an error when trying to execute the dtos.sh, make sure that dtos.sh is executable and owned by your user.
