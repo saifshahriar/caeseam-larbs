@@ -61,6 +61,14 @@ This script can take a long time to complete since it will install more than 300
 #+begin_example
 ParallelDownloads = 5
 #+end_example
+*** Doom Emacs doesn't launch
+After the installation is completed, Doom Emacs may not launch correctly the very first time.  Killing the Emacs server (if running) and restarting it fixes this.
+
+#+begin_example
+killall emacs
+/usr/bin/emacs --daemon &
+#+end_example
+
 
 * Contributing to DTOS
 Community contributions to the DTOS script is welcomed.  There are a few things to consider before making a merge request.
