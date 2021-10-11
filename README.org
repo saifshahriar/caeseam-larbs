@@ -50,7 +50,7 @@ cd dtos/
 #+end_example
 
 ** You must answer some YES/NO questions
-You will be asked several =yes/no= questions.  During package installation, pacman will ask you if you want to replace libxft with libxft-bgra.  You must answer YES (y) to this question, or some of the software that will get installed may not work correctly.  During the Doom Emacs part of the installation script, you will be asked two =yes/no= questions.  Answer YES (y) to both questions.
+You will be asked several =yes/no= questions.  During package installation, pacman will ask you if you want to replace libxft with libxft-bgra.  You must answer YES (y) to this question, or some of the software that will get installed may not work correctly.  During the Doom Emacs part of the installation script, you will be asked two =yes/no= questions.  The first question is about creating an envar file, and the second question is about installing all-the-icons fonts.  Answer YES (y) to both questions.
 
 ** Potential bugs
 *** Permission errors
