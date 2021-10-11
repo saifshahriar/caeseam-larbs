@@ -12,7 +12,7 @@
   - [[#potential-bugs][Potential bugs]]
 - [[#contributing-to-dtos][Contributing to DTOS]]
   - [[#edit-readmeorg][Edit README.org]]
-  - [[#test-you-changes-before-pushing][Test you changes before pushing]]
+  - [[#test-your-changes-before-pushing][Test your changes before pushing]]
 - [[#features-to-add-in-the-future][Features to add in the future:]]
 - [[#shebang-plus-comments][Shebang plus comments]]
 - [[#check-that-user-is-not-root][Check that user is NOT root!]]
@@ -65,8 +65,8 @@ ParallelDownloads = 5
 * Contributing to DTOS
 Community contributions to the DTOS script is welcomed.  There are a few things to consider before making a merge request.
 ** Edit README.org
-I understand that non-Emacs users may be confused with the way literate programming works, but the actual DTOS script is README.org which gets converted to dtos.sh.  So the file you should edit is README.org and not dtos.sh.  Through the magic of Org Mode in Emacs, README.org gets converted to dtos.sh.  If you edit dtos.sh and make a merge request, then I have to manually edit README.org to make it conform to your proposed changes.
-** Test you changes before pushing
+I understand that non-Emacs users may be confused with the way literate programming works, but the actual DTOS script is README.org which gets converted to dtos.sh.  So the file you should edit is README.org and not dtos.sh.  Through the magic of Org Mode in Emacs, README.org gets converted to dtos.sh.  If you edit dtos.sh (and not README.org) and make a merge request, then I have to manually edit README.org to make it conform to your proposed changes.  For a big merge, this is a lot work and could lead to mistakes being made in copying/pasting your changes.
+** Test your changes before pushing
 It would be a good idea to keep a clean installation of an Arch-based distro in a virtual machine, and then clone that clean VM when you need to test the script.  Please don't do a merge request without attempting to run the script in a fresh VM (one that you haven't previously ran the script on).
 
 * Features to add in the future:
