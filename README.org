@@ -6,6 +6,12 @@
 
 * TABLE OF CONTENT :toc:
 - [[#about-dtos][About DTOS]]
+- [[#installing-dtos][Installing DTOS]]
+  - [[#installation-instructions][Installation instructions]]
+  - [[#potential-bugs][Potential bugs]]
+- [[#contributing-to-dtos][Contributing to DTOS]]
+  - [[#edit-readmeorg][Edit README.org]]
+  - [[#test-you-changes-before-pushing][Test you changes before pushing]]
 - [[#features-to-add-in-the-future][Features to add in the future:]]
 - [[#shebang-plus-comments][Shebang plus comments]]
 - [[#check-that-user-is-not-root][Check that user is NOT root!]]
@@ -32,13 +38,31 @@
 
 DTOS is the name that I have chosen for my installation script that will deploy my Xmonad config, my Emacs config, as well as associated programs that are needed to create a proper "desktop" experience.  The programs that will be installed include Xmonad, Xmobar, Doom Emacs, Fish and other programs needed to recreate DT's XMonad desktop.
 
-=NOTE:= This script can take a long time to complete since it will install more than 300 packages.  Make sure that ParallelDownloads is enabled in your pacman.conf for faster download times!
+
+* Installing DTOS
+** Installation instructions
+To install DTOS, you need to clone this repository and run the dtos.sh script.
+#+begin_example
+git clone https://gitlab.com/dwt1/dtos
+cd dtos/
+./dtos.sh
+#+end_example
+** Potential bugs
+*** Permission errors
+If you get an error when trying to execute the dtos.sh, make sure that dtos.sh is executable and owned by your user.
+*** Slow download times
+This script can take a long time to complete since it will install more than 300 packages.  Also, make sure that the Linux distro that you are installing this on uses ParallelDownloads in /etc/pacman.conf for faster download times!  For an example, to enable ParallelDownloads so it downloads up to five packages at a time:
 
 #+begin_example
-In /etc/pacman.conf...
-
 ParallelDownloads = 5
 #+end_example
+
+* Contributing to DTOS
+Community contributions to the DTOS script is welcomed.  There are a few things to consider before making a merge request.
+** Edit README.org
+I understand that non-Emacs users may be confused with the way literate programming works, but the actual DTOS script is README.org which gets converted to dtos.sh.  So the file you should edit is README.org and not dtos.sh.  Through the magic of Org Mode in Emacs, README.org gets converted to dtos.sh.  If you edit dtos.sh and make a merge request, then I have to manually edit README.org to make it conform to your proposed changes.
+** Test you changes before pushing
+It would be a good idea to keep a clean installation of an Arch-based distro in a virtual machine, and then clone that clean VM when you need to test the script.  Please don't do a merge request without attempting to run the script in a fresh VM (one that you haven't previously ran the script on).
 
 * Features to add in the future:
 + Sddm is installed but we don't enable it, because most distros already have a login manager.  But I'd like to disable the currently enabled login manager and enable sddm.
