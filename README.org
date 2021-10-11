@@ -8,7 +8,7 @@
 - [[#about-dtos][About DTOS]]
 - [[#installing-dtos][Installing DTOS]]
   - [[#installation-instructions][Installation instructions]]
-  - [[#you-must-answer-some-yesno-questions][You must answer some YES/NO questions]]
+  - [[#important-you-must-answer-yes-to-all-yesno-questions][IMPORTANT: You must answer YES to all YES/NO questions]]
   - [[#potential-bugs][Potential bugs]]
 - [[#contributing-to-dtos][Contributing to DTOS]]
   - [[#edit-readmeorg][Edit README.org]]
@@ -49,13 +49,14 @@ cd dtos/
 ./dtos.sh
 #+end_example
 
-** You must answer some YES/NO questions
+** IMPORTANT: You must answer YES to all YES/NO questions
 You will be asked several =yes/no= questions:
 + Pacman will ask you if you want to replace libxft with libxft-bgra.
++ Pacman may ask you about other package conflicts as well.
 + Doom Emacs will ask about creating an envar file, and...
 + Doom will also ask about installing all-the-icons fonts.
 
-Answer =YES (y)= to these questions!
+You must answer =YES (y)= to these questions!
 
 ** Potential bugs
 *** Permission errors.
