@@ -1,7 +1,7 @@
 #+TITLE: DTOS
 #+DESCRIPTION: A post-installation script to install DT's xmonad desktop on an Arch-based distro.
 #+AUTHOR: Derek Taylor (DistroTube)
-#+PROPERTY: header-args :tangle dtos.sh
+#+PROPERTY: header-args :tangle dtos
 #+STARTUP: showeverything
 
 * TABLE OF CONTENT :toc:
@@ -41,11 +41,11 @@ DTOS is the name that I have chosen for my post-installation script that will de
 
 * Installing DTOS
 ** Installation instructions
-To install DTOS, you need to clone this repository and run the dtos.sh script.
+To install DTOS, you need to clone this repository and run the ~dtos~ script.
 #+begin_example
 git clone https://gitlab.com/dwt1/dtos
 cd dtos/
-./dtos.sh
+./dtos
 #+end_example
 
 ** IMPORTANT: You must answer YES to all YES/NO questions
@@ -59,7 +59,7 @@ You must answer =YES (y)= to these questions!  Answering =NO= will cause pacman 
 
 ** Potential bugs
 *** Permission errors.
-If you get an error when trying to execute the dtos.sh, make sure that dtos.sh is executable and owned by your user.
+If you get an error when trying to execute the ~dtos~ script, make sure that ~dtos~ is executable and owned by your user.
 *** Slow download times.
 This script can take a long time to complete since it will install more than 300 packages.  Also, make sure that the Linux distro that you are installing this on uses ParallelDownloads in /etc/pacman.conf for faster download times!  For an example, to enable ParallelDownloads so it downloads up to five packages at a time:
 
@@ -83,7 +83,7 @@ killall emacs
 * Contributing to DTOS
 Community contributions to the DTOS script is welcomed.  There are a few things to consider before making a merge request.
 ** Edit README.org
-I understand that non-Emacs users may be confused with the way literate programming works, but the actual DTOS script is README.org which gets converted to dtos.sh.  So the file you should edit is README.org and not dtos.sh.  Through the magic of Org Mode in Emacs, README.org gets converted to dtos.sh.  If you edit dtos.sh (and not README.org) and make a merge request, then I have to manually edit README.org to make it conform to your proposed changes.  For a big merge, this is a lot work and could lead to mistakes being made in copying/pasting your changes.
+I understand that non-Emacs users may be confused with the way literate programming works, but the actual DTOS script is README.org which gets converted to ~dtos~.  So the file you should edit is README.org and not ~dtos~.  Through the magic of Org Mode in Emacs, README.org gets converted to ~dtos~.  If you edit ~dtos~ (and not README.org) and make a merge request, then I have to manually edit README.org to make it conform to your proposed changes.  For a big merge, this is a lot work and could lead to mistakes being made in copying/pasting your changes.
 ** Test your changes before pushing
 It would be a good idea to keep a clean installation of an Arch-based distro in a virtual machine, and then clone that clean VM when you need to test the script.  Please don't do a merge request without attempting to run the script in a fresh VM (one that you haven't previously ran the script on).
 
