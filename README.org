@@ -84,6 +84,8 @@ killall emacs
 Community contributions to the DTOS script is welcomed.  There are a few things to consider before making a merge request.
 ** Edit README.org
 I understand that non-Emacs users may be confused with the way literate programming works, but the actual DTOS script is README.org which gets converted to ~dtos~.  So the file you should edit is README.org and not ~dtos~.  Through the magic of Org Mode in Emacs, README.org gets converted to ~dtos~.  If you edit ~dtos~ (and not README.org) and make a merge request, then I have to manually edit README.org to make it conform to your proposed changes.  For a big merge, this is a lot work and could lead to mistakes being made in copying/pasting your changes.
+
+To help non-Emacs users, there is a script in this repo (convert.sh) that will convert ~README.org~ into ~dtos~.  This will allow you to edit ~README.org~ in whatver editor that you prefer, and then convert it to see if exports to ~dtos~ correctly.
 ** Test your changes before pushing
 It would be a good idea to keep a clean installation of an Arch-based distro in a virtual machine, and then clone that clean VM when you need to test the script.  Please don't do a merge request without attempting to run the script in a fresh VM (one that you haven't previously ran the script on).
 
