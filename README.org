@@ -103,7 +103,6 @@ It would be a good idea to keep a clean installation of an Arch-based distro in 
 # DESC: An installation and deployment script for DT's Xmonad desktop.
 # WARNING: Run this script at your own risk.
 # DEPENDENCIES: dialog
-
 #+end_src
 * Check that user is NOT root!
 Don't run this script as root!  This is done for safety reasons.  This script makes a lot of changes to the $HOME of the $USER of this script.  For obvious reasons, we want $USER to not be 'root' and $HOME not to be '/root'.  Instead, run this script as a normal user.  You will be asked to enter a sudo password at several points during the installation.
