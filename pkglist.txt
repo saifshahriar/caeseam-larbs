@@ -17,6 +17,7 @@ dtos-doom
 dtos-fish
 dtos-local-bin
 dtos-opendoas
+dtos-qutebrowser
 dtos-sxiv
 dtos-xmobar
 dtos-xmonad
