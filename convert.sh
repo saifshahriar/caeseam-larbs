@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Get output file as argument or fall back to `dtos.sh`.
+# Get output file as argument or fall back to `dtos`.
 of="$1"
-[ -z "$1" ] && of='dtos.sh'
+[ -z "$1" ] && of='dtos'
 
 # Extract the shebang from README.org and write it to new file.
 grep ':shebang' README.org | cut -d \" -f2 > "$of"
