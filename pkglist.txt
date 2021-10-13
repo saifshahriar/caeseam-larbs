@@ -30,6 +30,7 @@ exa
 fd
 fish
 git
+htop
 libxft-bgra
 lolcat
 lxappearance
