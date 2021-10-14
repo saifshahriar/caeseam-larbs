@@ -318,7 +318,7 @@ while true; do
     case $yn in
         [Yy]* ) reboot;;
         [Nn]* ) break;;
-        ,* ) echo "Please answer yes or no.";;
+        * ) echo "Please answer yes or no.";;
     esac
 done
 #+end_src
