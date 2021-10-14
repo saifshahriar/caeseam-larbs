@@ -337,3 +337,15 @@ loginmanager() { \
 
 loginmanager && echo "DTOS has been installed!"
 #+end_src
+
+* Ask the user if they want to reboot
+#+begin_src bash
+while true; do
+    read -p "Do you want to reboot to get your dtos? [Y/n] " yn
+    case $yn in
+        [Yy]* ) reboot;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+#+end_src
