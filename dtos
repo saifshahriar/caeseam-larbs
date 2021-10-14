@@ -167,14 +167,9 @@ select choice in "${shells[@]}"; do
     esac
 done
 
-loginmanager() { \
-    dialog --colors --title "\Z5\ZbInstallation Complete!" \
-    --msgbox "\Z2Now logout of your current desktop environment \
-                or window manager and choose XMonad from your login manager. \
-                ENJOY!" 10 60
-}
-
-loginmanager && echo "DTOS has been installed!"
+echo "##############################"
+echo "## DTOS has been installed! ##"
+echo "##############################"
 
 while true; do
     read -p "Do you want to reboot to get your dtos? [Y/n] " yn

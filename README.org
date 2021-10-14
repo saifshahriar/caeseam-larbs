@@ -31,7 +31,7 @@
 - [[#compiling-xmonad][Compiling xmonad]]
 - [[#compiling-the-xmonadctl-script][Compiling the xmonadctl script]]
 - [[#set-default-user-shell][Set default USER shell]]
-- [[#message-stating-that-the-installation-is-complete][Message stating that the installation is complete!]]
+- [[#installation-is-complete-do-you-want-to-reboot][Installation is complete! Do you want to reboot?]]
 
 * About DTOS
 #+CAPTION: DTOS Scrot
@@ -326,26 +326,18 @@ select choice in "${shells[@]}"; do
 done
 #+end_src
 
-* Message stating that the installation is complete!
+* Installation is complete! Do you want to reboot?
 #+begin_src bash
-loginmanager() { \
-    dialog --colors --title "\Z5\ZbInstallation Complete!" \
-    --msgbox "\Z2Now logout of your current desktop environment \
-                or window manager and choose XMonad from your login manager. \
-                ENJOY!" 10 60
-}
+echo "##############################"
+echo "## DTOS has been installed! ##"
+echo "##############################"
 
-loginmanager && echo "DTOS has been installed!"
-#+end_src
-
-* Ask the user if they want to reboot
-#+begin_src bash
 while true; do
     read -p "Do you want to reboot to get your dtos? [Y/n] " yn
     case $yn in
         [Yy]* ) reboot;;
         [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
+        ,* ) echo "Please answer yes or no.";;
     esac
 done
 #+end_src
