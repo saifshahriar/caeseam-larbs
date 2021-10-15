@@ -148,26 +148,6 @@ select choice in "${shells[@]}"; do
     esac
 done
 
-echo "##################################################"
-echo "## The login manager 'sddm' has been installed. ##"
-echo "##################################################"
-while true; do
-    read -p "Would you like to enable sddm as your login manager? [Y/n] " yn
-    case $yn in
-        [Yy]* )
-            sudo systemctl disable $(grep '/usr/s\?bin'/etc/systemd/system/display-manager.service | awk -F / '{print $NF}')
-            sudo systemctl enable sddm
-            break
-            ;;
-        [Nn]* )
-            break
-            ;;
-        * )
-            echo "Please answer yes or no."
-            ;;
-    esac
-done
-
 echo "##############################"
 echo "## DTOS has been installed! ##"
 echo "##############################"
