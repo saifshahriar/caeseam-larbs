@@ -31,6 +31,7 @@
 - [[#compiling-xmonad][Compiling xmonad]]
 - [[#compiling-the-xmonadctl-script][Compiling the xmonadctl script]]
 - [[#set-default-user-shell][Set default USER shell]]
+- [[#enable-sddm-for-login-manager][Enable SDDM for login manager]]
 - [[#message-stating-that-the-installation-is-complete][Message stating that the installation is complete!]]
 
 * About DTOS
@@ -305,6 +306,32 @@ select choice in "${shells[@]}"; do
             ;;
     esac
 done
+#+end_src
+
+* Enable SDDM for login manager
+Disable the currently enabled display manager and enable SDDM instead.
+
+#+begin_src bash
+echo "##################################################"
+echo "## The login manager 'sddm' has been installed. ##"
+echo "##################################################"
+while true; do
+    read -p "Would you like to enable sddm as your login manager? [Y/n] " yn
+    case $yn in
+        [Yy]* )
+            sudo systemctl disable $(grep '/usr/s\?bin'/etc/systemd/system/display-manager.service | awk -F / '{print $NF}')
+            sudo systemctl enable sddm
+            break
+            ;;
+        [Nn]* )
+            break
+            ;;
+        * )
+            echo "Please answer yes or no."
+            ;;
+    esac
+done
+
 #+end_src
 
 * Message stating that the installation is complete!
