@@ -4,7 +4,7 @@
 #+PROPERTY: header-args :tangle dtos
 #+STARTUP: showeverything
 
-* TABLE OF CONTENT :toc:
+* TABLE OF CONTENTS :toc:
 - [[#about-dtos][About DTOS]]
 - [[#installing-dtos][Installing DTOS]]
   - [[#installation-instructions][Installation instructions]]
