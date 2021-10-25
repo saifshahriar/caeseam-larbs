@@ -8,12 +8,10 @@
 - [[#about-dtos][About DTOS]]
 - [[#installing-dtos][Installing DTOS]]
   - [[#installation-instructions][Installation instructions]]
-  - [[#important-you-must-answer-yes-to-all-yesno-questions][IMPORTANT: You must answer YES to all YES/NO questions]]
   - [[#potential-bugs][Potential bugs]]
 - [[#contributing-to-dtos][Contributing to DTOS]]
   - [[#edit-readmeorg][Edit README.org]]
   - [[#test-your-changes-before-pushing][Test your changes before pushing]]
-- [[#features-to-add-in-the-future][Features to add in the future:]]
 - [[#shebang-plus-comments][Shebang plus comments]]
 - [[#check-that-user-is-not-root][Check that user is NOT root!]]
 - [[#a-function-for-errors][A function for errors]]
@@ -50,17 +48,7 @@ cd dtos/
 ./dtos
 #+end_example
 
-** IMPORTANT: You must answer YES to all YES/NO questions
-You will be asked several =yes/no= questions:
-+ Pacman may ask you about removing conflicting packages.
-+ Doom Emacs will ask about creating an envar file, and...
-+ Doom will also ask about installing all-the-icons fonts.
-
-You must answer =YES (y)= to these questions!  Answering =NO= to pacman's questions will cause pacman to stop installing the packages in pkglist.txt, thus leaving you with a broken installation.
-
 ** Potential bugs
-*** Permission errors.
-If you get an error when trying to execute the ~dtos~ script, make sure that ~dtos~ is executable and owned by your user.
 *** Slow download times.
 This script can take a long time to complete since it will install more than 300 packages.  Also, make sure that the Linux distro that you are installing this on uses ParallelDownloads in /etc/pacman.conf for faster download times!  For an example, to enable ParallelDownloads so it downloads up to five packages at a time:
 
@@ -75,7 +63,6 @@ The solution is, before running the script, edit the pkglist.txt file and remove
 
 *** Doom Emacs doesn't launch.
 After the installation is completed, Doom Emacs may not launch correctly the very first time.  Killing the Emacs server (if running) and restarting it fixes this.
-
 #+begin_example
 killall emacs
 /usr/bin/emacs --daemon &
@@ -89,10 +76,6 @@ I understand that non-Emacs users may be confused with the way literate programm
 To help non-Emacs users, there is a script in this repo (~convert.sh~) that will convert ~README.org~ into ~dtos~.  This will allow you to edit ~README.org~ in whatver editor that you prefer, and then convert it to see if exports to ~dtos~ correctly.
 ** Test your changes before pushing
 It would be a good idea to keep a clean installation of an Arch-based distro in a virtual machine, and then clone that clean VM when you need to test the script.  Please don't do a merge request without attempting to run the script in a fresh VM (one that you haven't previously ran the script on).
-
-* Features to add in the future:
-+ Sddm is installed but we don't enable it, because most distros already have a login manager.  But I'd like to disable the currently enabled login manager and enable sddm.
-+ To fix Doom Emacs not launching correctly on first attempt: killall emacs && /usr/bin/emacs --daemon &
 
 * Shebang plus comments
 #+begin_src bash :shebang "#!/usr/bin/env bash"
