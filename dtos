@@ -149,6 +149,14 @@ select choice in "${shells[@]}"; do
     esac
 done
 
+# Disable the current login manager
+sudo systemctl disable $(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}') || echo "Cannot disable current display manager."
+# Enable sddm as login manager
+sudo systemctl enable sddm
+echo "###################################"
+echo "## Enable sddm as login manager. ##"
+echo "###################################"
+
 echo "##############################"
 echo "## DTOS has been installed! ##"
 echo "##############################"
