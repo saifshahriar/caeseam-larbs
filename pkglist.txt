@@ -52,6 +52,7 @@ ripgrep
 sddm
 shell-color-scripts
 shellcheck
+slock
 starship
 stack
 sxiv
