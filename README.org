@@ -303,8 +303,12 @@ sudo systemctl enable sddm
 echo "###################################"
 echo "## Enable sddm as login manager. ##"
 echo "###################################"
-#+end_src
 
+# Make multicolor-sddm-theme the defualt sddm theme
+[ -f "/usr/lib/sddm/sddm.conf.d/default.conf" ] && \
+    sudo cp /usr/lib/sddm/sddm.conf.d/default.conf /usr/lib/sddm/sddm.conf.d/default.conf.backup && \
+    sudo sed -i 's/^Current=*.*/Current=multicolor-sddm-theme/g' /usr/lib/sddm/sddm.conf.d/default.conf
+#+end_src
 
 * Message stating that the installation is complete!
 #+begin_src bash
