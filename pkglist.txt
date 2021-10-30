@@ -1,6 +1,9 @@
+adapta-gtk-theme
 adobe-source-code-pro-fonts
 adobe-source-sans-fonts
 alacritty
+arc-gtk-theme
+arc-icon-theme
 aura
 bluez
 bluez-utils
@@ -25,6 +28,7 @@ dtos-xresources
 dtos-xwallpaper
 dtos-zsh
 element-desktop
+elementary-icon-theme
 emacs
 exa
 fd
@@ -37,10 +41,12 @@ lxappearance
 lxsession
 maim
 mpv
+multicolor-sddm-theme
 neovim
 network-manager-applet
 opendoas
 otf-font-awesome
+otf-raleway
 pacman-contrib
 pandoc
 pcmanfm
