@@ -157,7 +157,7 @@ echo "###################################"
 echo "## Enable sddm as login manager. ##"
 echo "###################################"
 
-# Make multicolor-sddm-theme the defualt sddm theme
+# Make multicolor-sddm-theme the default sddm theme
 [ -f "/usr/lib/sddm/sddm.conf.d/default.conf" ] && \
     sudo cp /usr/lib/sddm/sddm.conf.d/default.conf /usr/lib/sddm/sddm.conf.d/default.conf.backup && \
     sudo sed -i 's/^Current=*.*/Current=multicolor-sddm-theme/g' /usr/lib/sddm/sddm.conf.d/default.conf
