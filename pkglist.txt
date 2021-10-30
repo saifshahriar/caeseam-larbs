@@ -82,5 +82,6 @@ xorg-xset
 xorg-xsetroot
 xterm
 xwallpaper
+yad
 zathura
 zsh
