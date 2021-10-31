@@ -16,6 +16,7 @@ dtos-alacritty
 dtos-backgrounds
 dtos-bash
 dtos-conky
+dtos-dmscripts
 dtos-doom
 dtos-fish
 dtos-local-bin
