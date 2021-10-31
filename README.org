@@ -118,7 +118,7 @@ error() { \
 echo "################################################################"
 echo "## Syncing the repos and installing 'dialog' if not installed ##"
 echo "################################################################"
-sudo pacman --noconfirm --needed -Sy dialog || error "Error syncing the repos."
+sudo pacman --noconfirm --needed -Syu dialog || error "Error syncing the repos."
 #+end_src
 
 * Welcome message
