@@ -157,14 +157,21 @@ echo "###################################"
 echo "## Enable sddm as login manager. ##"
 echo "###################################"
 
-# Make multicolor-sddm-theme the default sddm theme
+## Make multicolor-sddm-theme the default sddm theme
+# Arch uses this config location, I think.
 [ -f "/usr/lib/sddm/sddm.conf.d/default.conf" ] && \
     sudo cp /usr/lib/sddm/sddm.conf.d/default.conf /usr/lib/sddm/sddm.conf.d/default.conf.backup && \
     sudo sed -i 's/^Current=*.*/Current=multicolor-sddm-theme/g' /usr/lib/sddm/sddm.conf.d/default.conf
 
+# Manjaro KDE uses this config location.
 [ -f "/etc/sddm.conf" ] && \
     sudo cp /etc/sddm.conf /etc/sddm.conf.backup && \
     sudo sed -i 's/^Current=*.*/Current=multicolor-sddm-theme/g' /etc/sddm.conf
+
+# ArcoLinuxB Awesome uses this config location.
+[ -f "/etc/sddm.conf.d/kde_settings.conf" ] && \
+    sudo cp /etc/sddm.conf.d/kde_settings.conf /etc/sddm.conf.d/kde_settings.backup && \
+    sudo sed -i 's/^Current=*.*/Current=multicolor-sddm-theme/g' /etc/sddm.conf.d/kde_settings.conf
 
 echo "##############################"
 echo "## DTOS has been installed! ##"
