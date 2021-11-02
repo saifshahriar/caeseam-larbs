@@ -222,7 +222,15 @@ echo "#########################################################"
 [ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
 [ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom install
+PATH="$HOME/.emacs.d/bin:$PATH"
+mkdir ~/.doom.d
+cp ~/.emacs.d/init.example.el ~/.doom.d/init.el
+cp ~/.emacs.d/core/templates/config.example.el ~/.doom.d/config.el
+cp ~/.emacs.d/core/templates/packages.example.el ~/.doom.d/packages.el
+doom sync
+doom env
+emacs --batch -f all-the-icons-install-fonts
+
 #+end_src
 
 * Copy pacman hooks
