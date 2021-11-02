@@ -149,6 +149,27 @@ select choice in "${shells[@]}"; do
     esac
 done
 
+PS3='Enter your modifer key (enter number): '
+modkeys=("mod1Mask" "mod4Mask" "mod3Mask" "quit")
+select choice in "${modkeys[@]}"; do
+    case $choice in
+         mod1Mask | mod4Mask | mod3Mask)
+             sed -i "s/mod4Mask/${choice}/" ~/.xmonad/xmonad.hs &&
+             echo -e "$choice has been set as your modkey"      
+            break
+            ;;
+         quit)
+            echo "User quit with default modkey."
+            break
+            ;;
+         *)
+            echo "invalid option $REPLY"
+            ;;
+    esac
+done
+
+
+
 # Disable the current login manager
 sudo systemctl disable $(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}') || echo "Cannot disable current display manager."
 # Enable sddm as login manager
