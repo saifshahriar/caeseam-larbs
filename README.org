@@ -9,6 +9,7 @@
 - [[#installing-dtos][Installing DTOS]]
   - [[#installation-instructions][Installation instructions]]
   - [[#potential-bugs][Potential bugs]]
+- [[#updating-dtos][Updating DTOS]]
 - [[#contributing-to-dtos][Contributing to DTOS]]
   - [[#edit-readmeorg][Edit README.org]]
   - [[#test-your-changes-before-pushing][Test your changes before pushing]]
@@ -67,6 +68,16 @@ After the installation is completed, Doom Emacs may not launch correctly the ver
 killall emacs
 /usr/bin/emacs --daemon &
 #+end_example
+
+* Updating DTOS
+DTOS is updated in the standard way as all Arch-based Linux distros:
+#+begin_example
+sudo pacman -Syu
+#+end_example
+
+Many DTOS packages are configuration files.  Those packages install their config files to /etc/dtos since we don't want to overwrite your config files accidentally.  If you want to use the updated configs, then you need to manually copy the configs from /etc/dtos into $HOME.
+
+=NOTE:= There is no need to run the DTOS script more than once.  If you have successfully installed DTOS, then you already have access to the [[https://gitlab.com/dwt1/dtos-core-repo][DTOS core repository]] and all of the DTOS packages.  If a newer version of DTOS installs packages that your version did not, then just install those packages yourself using pacman.
 
 * Contributing to DTOS
 Community contributions to the DTOS script is welcomed.  There are a few things to consider before making a merge request.
