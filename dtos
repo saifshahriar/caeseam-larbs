@@ -31,12 +31,12 @@ echo "################################################################"
 sudo pacman --noconfirm --needed -Syu dialog || error "Error syncing the repos."
 
 welcome() { \
-    dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4This is a script that will install what I sarcastically call DTOS (DT's operating system).  It's really just an installation script for those that want to try out my XMonad desktop.  We will add DTOS repos to Pacman and install the XMonad tiling window manager, the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs and many other essential programs needed to make my dotfiles work correctly.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
+    dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4This is a script that will install what I sarcastically call DTOS (DT's Operating System).  It's really just an installation script for those that want to try out my XMonad desktop.  We will add DTOS repos to Pacman and install the XMonad tiling window manager, the Xmobar panel, the Alacritty terminal, the Fish shell, Doom Emacs and many other essential programs needed to make my dotfiles work correctly.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
 
-    dialog --colors --title "\Z7\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z4This script is not allowed to be run as root, but you will be asked to enter your sudo password at various points during this installation. This is to give PACMAN the necessary permissions to install the software.  So stay near the computer." 8 60
+    dialog --colors --title "\Z7\ZbStay near your computer!" --yes-label "Continue" --no-label "Exit" --yesno "\Z4This script is not allowed to be run as root, but you will be asked to enter your sudo password at various points during this installation. This is to give Pacman the necessary permissions to install the software.  So stay near the computer." 8 60
 }
 
-welcome || error "User choose to exit."
+welcome || error "User chose to exit."
 
 lastchance() { \
     dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
@@ -44,7 +44,7 @@ lastchance() { \
     dialog --colors --title "\Z7\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z4Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
 }
 
-lastchance || error "User choose to exit."
+lastchance || error "User chose to exit."
 
 addrepo() { \
     echo "#########################################################"
@@ -70,7 +70,7 @@ addkeyserver || error "Error adding keyservers to /etc/pacman.d/gnupg/gpg.conf"
 receive_key() { \
     local _pgpkey="C71486C31555B12E"
     echo "#####################################"
-    echo "## Adding PGP key $_pgpkey ##"
+    echo "##     Adding PGP key $_pgpkey     ##"
     echo "#####################################"
     sudo pacman-key --recv-key $_pgpkey
     sudo pacman-key --lsign-key $_pgpkey
@@ -82,7 +82,7 @@ receive_key || error "Error receiving PGP key $_pgpkey"
 sudo pacman --needed --ask 4 -Sy - < pkglist.txt
 
 echo "################################################################"
-echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
+echo "## Copying DTOS configuration files from /etc/dtos into $HOME ##"
 echo "################################################################"
 [ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
 [ -d /etc/dtos ] && mkdir ~/dtos-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/dtos ~/dtos-backup-$(date +%Y.%m.%d-%H%M)
@@ -184,11 +184,11 @@ echo "## DTOS has been installed! ##"
 echo "##############################"
 
 while true; do
-    read -p "Do you want to reboot to get your dtos? [Y/n] " yn
+    read -p "Do you want to reboot to use your DTOS? [Y/n] " yn
     case $yn in
         [Yy]* ) reboot;;
         [Nn]* ) break;;
         "" ) reboot;;
-        * ) echo "Please answer yes or no.";;
+        * ) echo "Please answer Yes or No.";;
     esac
 done
