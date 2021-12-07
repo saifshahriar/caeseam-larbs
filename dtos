@@ -11,13 +11,7 @@
 # DEPENDENCIES: dialog
 
 if [ "$(id -u)" = 0 ]; then
-    echo "##################################################################"
-    echo "This script MUST NOT be run as root user since it makes changes"
-    echo "to the \$HOME directory of the \$USER executing this script."
-    echo "The \$HOME directory of the root user is, of course, '/root'."
-    echo "We don't want to mess around in there. So run this script as a"
-    echo "normal user. You will be asked for a sudo password when necessary."
-    echo "##################################################################"
+    printf "##################################################################\nThis script MUST NOT be run as root user since it makes changes\nto the \$HOME directory of the \$USER executing this script.\nThe \$HOME directory of the root user is, of course, '/root'.\nWe don't want to mess around in there. So run this script as a\nnormal user. You will be asked for a sudo password when necessary.\n#################################################################\n"
     exit 1
 fi
 
@@ -25,9 +19,7 @@ error() { \
     clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
 }
 
-echo "################################################################"
-echo "## Syncing the repos and installing 'dialog' if not installed ##"
-echo "################################################################"
+printf "################################################################\n## Syncing the repos and installing 'dialog' if not installed ##"\n################################################################\n"
 sudo pacman --noconfirm --needed -Syu dialog || error "Error syncing the repos."
 
 welcome() { \
@@ -47,9 +39,7 @@ lastchance() { \
 lastchance || error "User choose to exit."
 
 addrepo() { \
-    echo "#########################################################"
-    echo "## Adding the DTOS core repository to /etc/pacman.conf ##"
-    echo "#########################################################"
+    printf "#########################################################\n## Adding the DTOS core repository to /etc/pacman.conf ##\n#########################################################\n"
     grep -qxF "[dtos-core-repo]" /etc/pacman.conf ||
         (echo "[dtos-core-repo]"; echo "SigLevel = Required DatabaseOptional"; \
         echo "Server = https://gitlab.com/dwt1/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
@@ -58,9 +48,7 @@ addrepo() { \
 addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
 
 addkeyserver() { \
-    echo "#######################################################"
-    echo "## Adding keyservers to /etc/pacman.d/gnupg/gpg.conf ##"
-    echo "#######################################################"
+    printf "#######################################################\n## Adding keyservers to /etc/pacman.d/gnupg/gpg.conf ##\n#######################################################\n"
     grep -qxF "keyserver.ubuntu.com:80" /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkp://keyserver.ubuntu.com:80" | sudo tee -a /etc/pacman.d/gnupg/gpg.conf
     grep -qxF "keyserver.ubuntu.com:443" /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkps://keyserver.ubuntu.com:443" | sudo tee -a /etc/pacman.d/gnupg/gpg.conf
 }
@@ -69,9 +57,7 @@ addkeyserver || error "Error adding keyservers to /etc/pacman.d/gnupg/gpg.conf"
 
 receive_key() { \
     local _pgpkey="C71486C31555B12E"
-    echo "#####################################"
-    echo "## Adding PGP key $_pgpkey ##"
-    echo "#####################################"
+    printf "#####################################\n## Adding PGP key $_pgpkey ##\n#####################################\n"
     sudo pacman-key --recv-key $_pgpkey
     sudo pacman-key --lsign-key $_pgpkey
 }
@@ -81,9 +67,7 @@ receive_key || error "Error receiving PGP key $_pgpkey"
 # Let's install each package listed in the pkglist.txt file.
 sudo pacman --needed --ask 4 -Sy - < pkglist.txt
 
-echo "################################################################"
-echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
-echo "################################################################"
+printf "################################################################\n## Copying DTOS configuration files from /etc/dtos into \$HOME ##\n################################################################\n"
 [ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
 [ -d /etc/dtos ] && mkdir ~/dtos-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/dtos ~/dtos-backup-$(date +%Y.%m.%d-%H%M)
 [ ! -d ~/.config ] && mkdir ~/.config
@@ -93,9 +77,7 @@ cd /etc/dtos && cp -Rf . ~ && cd -
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
 
-echo "#########################################################"
-echo "## Installing Doom Emacs. This may take a few minutes. ##"
-echo "#########################################################"
+printf "#########################################################\n## Installing Doom Emacs. This may take a few minutes. ##\n########################################################\n"
 [ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
 [ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
@@ -113,18 +95,14 @@ sed -i 's/DMTERM=\"st -e\"/DMTERM=\"alacritty -e\"/g' $HOME/.config/dmscripts/co
 sed -i 's/setbg_dir=\"${HOME}\/Pictures\/Wallpapers\"/setbg_dir=\"\/usr\/share\/backgrounds\/dtos-backgrounds\"/g' $HOME/.config/dmscripts/config
 
 xmonad_recompile() { \
-    echo "########################"
-    echo "## Recompiling XMonad ##"
-    echo "########################"
+    printf "########################\n## Recompiling XMonad ##\n########################\n"
     xmonad --recompile
 }
 
 xmonad_recompile || error "Error recompiling Xmonad!"
 
 xmonadctl_compile() { \
-    echo "####################################"
-    echo "## Compiling the xmonadctl script ##"
-    echo "####################################"
+    printf "####################################\n## Compiling the xmonadctl script ##\n####################################\n"
     ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
 }
 
@@ -154,9 +132,7 @@ done
 sudo systemctl disable $(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}') || echo "Cannot disable current display manager."
 # Enable sddm as login manager
 sudo systemctl enable sddm
-echo "###################################"
-echo "## Enable sddm as login manager. ##"
-echo "###################################"
+echo "###################################\n## Enable sddm as login manager. ##\n###################################\n"
 
 ## Make multicolor-sddm-theme the default sddm theme ##
 # This is the sddm system configuration file.
@@ -179,12 +155,8 @@ echo "###################################"
     sudo cp /etc/sddm.conf.d/kde_settings.conf /etc/sddm.conf.d/kde_settings.backup && \
     sudo sed -i 's/^Current=*.*/Current=multicolor-sddm-theme/g' /etc/sddm.conf.d/kde_settings.conf
 
-echo "##############################"
-echo "## DTOS has been installed! ##"
-echo "##############################"
-
 while true; do
-    read -p "Do you want to reboot to get your dtos? [Y/n] " yn
+    read -p "Do you want to reboot to get your DTOS? [Y/n] " yn
     case $yn in
         [Yy]* ) reboot;;
         [Nn]* ) break;;
