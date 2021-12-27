@@ -6,6 +6,7 @@
 
 * TABLE OF CONTENT :toc:
 - [[#about-dtos][About DTOS]]
+- [[#note-to-dtos-gui ][Small note to kdialog version of DTOS]]
 - [[#installing-dtos][Installing DTOS]]
   - [[#installation-instructions][Installation instructions]]
   - [[#important-you-must-answer-yes-to-all-yesno-questions][IMPORTANT: You must answer YES to all YES/NO questions]]
@@ -38,6 +39,10 @@
 [[https://gitlab.com/dwt1/dotfiles/-/raw/master/.screenshots/dtos-thumb-01.png]]
 
 DTOS is the name that I have chosen for my post-installation script that will deploy my Xmonad config, my Emacs config, as well as associated programs that are needed to create a proper "desktop" experience.  DTOS should work on Arch Linux or any Arch-based distribution.  The programs that will be installed include Xmonad, Xmobar, Doom Emacs, Fish and other programs needed to recreate DT's XMonad desktop.
+
+* Small note to kdialog version of DTOS
+
+This version is still WIP (work in progress) and it still needs some care. It is essentialy a classic DTOS w/ GUI dialogs
 
 * Installing DTOS
 ** Installation instructions
