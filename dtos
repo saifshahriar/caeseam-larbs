@@ -79,7 +79,7 @@ receive_key() { \
 receive_key || error "Error receiving PGP key $_pgpkey"
 
 # Let's install each package listed in the pkglist.txt file.
-sudo pacman --needed --ask 4 -Sy - < pkglist.txt
+sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install required packages"
 
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
