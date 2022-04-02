@@ -143,6 +143,20 @@ welcome() { \
 welcome || error "User choose to exit."
 #+end_src
 
+* Warning the user about potential problems
+#+begin_src bash
+speedwarning() { \
+    dialog --colors --title "\Z7\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! The ParallelDownloads option is not enabled in /etc/pacman.conf. This may result in slower installation speeds. Are you sure you want to continue?" 16 60 || error "User choose to exit."
+}
+
+distrowarning() { \
+    dialog --colors --title "\Z7\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! While this script works on all Arch based distros, some distros choose to package certain things that we also package, please look at the package list and remove conflicts manually.Are you sure you want to continue?" 16 60 || error "User choose to exit."
+}
+
+grep -qs "#ParallelDownloads" /etc/pacman.conf && speedwarning
+grep -qs "ID=arch" /etc/os-release || distrowarning 
+#+end_src
+
 * Asking user to confirm choice to install DTOS.
 #+begin_src bash
 lastchance() { \
@@ -233,7 +247,7 @@ echo "#########################################################"
 [ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
 [ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom install
+~/.emacs.d/bin/doom -y install
 ~/.emacs.d/bin/doom sync
 #+end_src
 
