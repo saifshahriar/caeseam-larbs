@@ -29,7 +29,6 @@ dtos-xmonad
 dtos-xresources
 dtos-xwallpaper
 dtos-zsh
-element-desktop
 elementary-icon-theme
 emacs
 exa
