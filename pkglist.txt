@@ -1,7 +1,7 @@
 adapta-gtk-theme
 adobe-source-code-pro-fonts
 adobe-source-sans-fonts
-alacritty
+kitty
 arc-gtk-theme
 arc-icon-theme
 aura
@@ -13,13 +13,9 @@ bat
 cups
 dmenu-distrotube
 dmscripts
-dtos-alacritty
 dtos-backgrounds
-dtos-bash
-dtos-conky
 dtos-dmscripts
 dtos-doom
-dtos-fish
 dtos-local-bin
 dtos-opendoas
 dtos-qutebrowser
@@ -33,7 +29,6 @@ elementary-icon-theme
 emacs
 exa
 fd
-fish
 git
 htop
 libxft-bgra
@@ -42,7 +37,7 @@ lxappearance
 lxsession
 maim
 mpv
-multicolor-sddm-theme
+sddm-sugar-dark
 neovim
 network-manager-applet
 opendoas
