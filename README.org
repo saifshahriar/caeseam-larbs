@@ -18,6 +18,7 @@
 - [[#a-function-for-errors][A function for errors]]
 - [[#sync-the-repos-and-install-dialog][Sync the repos and install 'dialog']]
 - [[#welcome-message][Welcome message]]
+- [[#warning-the-user-about-potential-problems][Warning the user about potential problems]]
 - [[#asking-user-to-confirm-choice-to-install-dtos][Asking user to confirm choice to install DTOS.]]
 - [[#adding-dtos-repo-to-pacmanconf][Adding DTOS repo to pacman.conf.]]
 - [[#adding-keyservers-to-gpgconf][Adding keyservers to gpg.conf.]]
@@ -44,7 +45,7 @@ DTOS is the name that I have chosen for my post-installation script that will de
 ** Installation instructions
 To install DTOS, you need to clone this repository and run the ~dtos~ script.
 #+begin_example
-git clone https://gitlab.com/dwt1/dtos
+git clone https://gitlab.com/dtos/dtos
 cd dtos/
 ./dtos
 #+end_example
@@ -93,7 +94,7 @@ It would be a good idea to keep a clean installation of an Arch-based distro in 
 #  ____ _____ ___  ____
 # |  _ \_   _/ _ \/ ___|   Derek Taylor (DistroTube)
 # | | | || || | | \___ \   http://www.youtube.com/c/DistroTube
-# | |_| || || |_| |___) |  http://www.gitlab.com/dwt1/dtos
+# | |_| || || |_| |___) |  http://www.gitlab.com/dtos/dtos
 # |____/ |_| \___/|____/
 #
 # NAME: DTOS
@@ -176,7 +177,7 @@ addrepo() { \
     echo "#########################################################"
     grep -qxF "[dtos-core-repo]" /etc/pacman.conf ||
         (echo "[dtos-core-repo]"; echo "SigLevel = Required DatabaseOptional"; \
-        echo "Server = https://gitlab.com/dwt1/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
+        echo "Server = https://gitlab.com/dtos/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
 }
 
 addrepo || error "Error adding DTOS repo to /etc/pacman.conf."

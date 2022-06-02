@@ -2,7 +2,7 @@
 #  ____ _____ ___  ____
 # |  _ \_   _/ _ \/ ___|   Derek Taylor (DistroTube)
 # | | | || || | | \___ \   http://www.youtube.com/c/DistroTube
-# | |_| || || |_| |___) |  http://www.gitlab.com/dwt1/dtos
+# | |_| || || |_| |___) |  http://www.gitlab.com/dtos/dtos
 # |____/ |_| \___/|____/
 #
 # NAME: DTOS
@@ -47,7 +47,7 @@ distrowarning() { \
 }
 
 grep -qs "#ParallelDownloads" /etc/pacman.conf && speedwarning
-grep -qs "ID=arch" /etc/os-release || distrowarning 
+grep -qs "ID=arch" /etc/os-release || distrowarning
 
 lastchance() { \
     dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
@@ -63,7 +63,7 @@ addrepo() { \
     echo "#########################################################"
     grep -qxF "[dtos-core-repo]" /etc/pacman.conf ||
         (echo "[dtos-core-repo]"; echo "SigLevel = Required DatabaseOptional"; \
-        echo "Server = https://gitlab.com/dwt1/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
+        echo "Server = https://gitlab.com/dtos/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
 }
 
 addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
