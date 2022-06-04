@@ -2,6 +2,7 @@
 #+DESCRIPTION: A post-installation script to install DT's xmonad desktop on an Arch-based distro.
 #+AUTHOR: Derek Taylor (DistroTube)
 #+PROPERTY: header-args :tangle dtos
+#+auto_tangle: t
 #+STARTUP: showeverything
 
 * TABLE OF CONTENTS :toc:
@@ -211,13 +212,13 @@ receive_key || error "Error receiving PGP key $_pgpkey"
 #+end_src
 
 * Install the packages from repositories
-All packages listed are either in the standard Arch repos or in the DTOS repos. All of these will be installed using pacman.  The only program that will not be installed through pacman is Doom Emacs, which will be installed later in the script.
+All packages listed are either in the standard Arch repos or in the DTOS repos.  All of these will be installed using pacman.  The only program that will not be installed through pacman is Doom Emacs, which will be installed later in the script.
 
 =NOTE:= The '--ask 4' option is an undocumented option for pacman that can be found in pacman's source code (in pacman's alpm.h).  Adding this flags means that all questions about removing packages that are conflicts will automatically be answered YES.
 
 #+begin_src bash
 # Let's install each package listed in the pkglist.txt file.
-sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install required packages"
+sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install required packages."
 #+end_src
 
 * Copy configs over from /etc/dtos into $HOME
