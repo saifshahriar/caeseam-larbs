@@ -249,7 +249,7 @@ echo "#########################################################"
 [ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
 [ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom -y install
+~/.emacs.d/bin/doom --force install
 ~/.emacs.d/bin/doom sync
 #+end_src
 
