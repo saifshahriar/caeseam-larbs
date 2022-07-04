@@ -16,6 +16,7 @@ dmscripts
 dtos-alacritty
 dtos-backgrounds
 dtos-bash
+dtos-cache
 dtos-conky
 dtos-dmscripts
 dtos-doom
