@@ -54,13 +54,14 @@ localewarning() { \
         dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! Your locales have not been set! Please set your LANG and LC_CTYPE variable to your appropriate local in /etc/locale.conf (they should both be the same). Run locale-gen, reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale" 16 60 && error "Locales not set, see: https://wiki.archlinux.org/title/locale"
 }
 
+localewarning
+
 lastchance() { \
     dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
 
     dialog --colors --title "\Z7\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z4Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
 }
 
-localewarning 
 lastchance || error "User choose to exit."
 
 addrepo() { \
