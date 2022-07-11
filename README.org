@@ -156,7 +156,17 @@ distrowarning() { \
 }
 
 grep -qs "#ParallelDownloads" /etc/pacman.conf && speedwarning
-grep -qs "ID=arch" /etc/os-release || distrowarning 
+grep -qs "ID=arch" /etc/os-release || distrowarning
+#+end_src
+
+* Confirming locales are set
+#+begin_src bash
+localewarning() { \
+        [[ $LANG && $LC_CTYPE ]] && return 0
+        dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! Your locales have not been set! Please set your LANG and LC_CTYPE variable to your appropriate local in /etc/locale.conf (they should both be the same). Run locale-gen, reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale" 16 60 && error "Locales not set, see: https://wiki.archlinux.org/title/locale"
+}
+
+localewarning
 #+end_src
 
 * Asking user to confirm choice to install DTOS.
