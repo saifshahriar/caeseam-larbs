@@ -49,7 +49,7 @@ grep -qs "ID=arch" /etc/os-release || distrowarning
 
 localewarning() { \
         [[ -z $LANG || -z $LC_CTYPE ]] && \
-        dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! Your locales have not been set! Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf (NOTE: they should both be the same). Run 'sudo locale-gen', reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale" 16 60 && error "Locales not set! You need to set your LANG and LC_CTYPE variables in /etc/locale.conf.  After verifying these variables are set, run: sudo locale-gen. Then reboot and run the DTOS install script again.  See: https://wiki.archlinux.org/title/locale"
+        dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! Your locales have not been set! Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf (NOTE: they should both be the same). Run 'sudo locale-gen', reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale" 16 60 && error "Your locales have not been set! Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf (NOTE: they should both be the same). Run 'sudo locale-gen', reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale"
 }
 
 localewarning
@@ -93,6 +93,47 @@ receive_key() { \
 }
 
 receive_key || error "Error receiving PGP key $_pgpkey"
+
+echo "##################################################"
+echo "##        CHOOSE YOUR WINDOW MANAGER(S)         ##"
+echo "##    Choices are: xmonad, awesome, & qtile.    ##"
+echo "##  You should choose at least one, otherwise,  ##"
+echo "##  you will not have a graphical environment.  ##"
+echo "## If unsure, Xmonad is the recommended choice. ##"
+echo "##################################################"
+
+while true; do
+    read -p "Do you wish to install XMonad? (Yy/Nn)" yn
+    case $yn in
+        [Yy]* ) sudo pacman -S xmonad xmonad-contrib xmobar dtos-xmonad dtos-xmobar;
+                break;;
+        [Nn]* ) echo "You choose not to install XMonad.";
+                break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+while true; do
+read -p "Do you wish to install Awesome? (Yy/Nn)" yn
+    case $yn in
+        [Yy]* ) sudo pacman -S awesome dtos-awesome ;
+                break;;
+        [Nn]* ) echo "You choose not to install Awesome.";
+                exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+while true; do
+    read -p "Do you wish to install Qtile? (Yy/Nn)" yn
+    case $yn in
+        [Yy]* ) sudo pacman -S qtile dtos-qtile ;
+                break;;
+        [Nn]* ) echo "You choose not to install Qtile." ;
+                break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
 
 # Let's install each package listed in the pkglist.txt file.
 sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install required packages."

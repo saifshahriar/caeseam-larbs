@@ -26,8 +26,6 @@ dtos-opendoas
 dtos-qutebrowser
 dtos-sounds
 dtos-sxiv
-dtos-xmobar
-dtos-xmonad
 dtos-xresources
 dtos-xwallpaper
 dtos-zsh
@@ -79,9 +77,6 @@ xf86-video-qxl
 xf86-video-intel
 xf86-video-amdgpu
 xf86-video-nouveau
-xmonad
-xmonad-contrib
-xmobar
 xorg-server
 xorg-xkill
 xorg-xmessage
