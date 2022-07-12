@@ -105,7 +105,7 @@ echo "##################################################"
 while true; do
     read -p "Do you wish to install XMonad? (Yy/Nn)" yn
     case $yn in
-        [Yy]* ) sudo pacman -S xmonad xmonad-contrib xmobar dtos-xmonad dtos-xmobar;
+        [Yy]* ) sudo pacman -Sy xmonad xmonad-contrib xmobar dtos-xmonad dtos-xmobar;
                 break;;
         [Nn]* ) echo "You choose not to install XMonad.";
                 break;;
@@ -116,7 +116,7 @@ done
 while true; do
 read -p "Do you wish to install Awesome? (Yy/Nn)" yn
     case $yn in
-        [Yy]* ) sudo pacman -S awesome dtos-awesome ;
+        [Yy]* ) sudo pacman -Sy awesome dtos-awesome ;
                 break;;
         [Nn]* ) echo "You choose not to install Awesome.";
                 exit;;
@@ -127,7 +127,7 @@ done
 while true; do
     read -p "Do you wish to install Qtile? (Yy/Nn)" yn
     case $yn in
-        [Yy]* ) sudo pacman -S qtile dtos-qtile ;
+        [Yy]* ) sudo pacman -Sy qtile dtos-qtile ;
                 break;;
         [Nn]* ) echo "You choose not to install Qtile." ;
                 break;;
