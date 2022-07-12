@@ -161,8 +161,8 @@ grep -qs "ID=arch" /etc/os-release || distrowarning
 * Confirming locales are set
 #+begin_src bash
 localewarning() { \
-        [[ $LANG && $LC_CTYPE ]] \
-        dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! Your locales have not been set! Please set your LANG and LC_CTYPE variable to your appropriate local in /etc/locale.conf (they should both be the same). Run 'sudo locale-gen', reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale" 16 60 && error "Locales not set! You need to set your LANG and LC_CTYPE variables in /etc/locale.conf.  After verifying these variables are set, run: sudo locale-gen. Then reboot and run the DTOS install script again.  See: https://wiki.archlinux.org/title/locale"
+        [[ -z $LANG || -z $LC_CTYPE ]] && \
+        dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! Your locales have not been set! Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf (NOTE: they should both be the same). Run 'sudo locale-gen', reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale" 16 60 && error "Locales not set! You need to set your LANG and LC_CTYPE variables in /etc/locale.conf.  After verifying these variables are set, run: sudo locale-gen. Then reboot and run the DTOS install script again.  See: https://wiki.archlinux.org/title/locale"
 }
 
 localewarning
