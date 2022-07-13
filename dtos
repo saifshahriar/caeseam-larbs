@@ -185,7 +185,7 @@ xmonadctl_compile() { \
     ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
 }
 
-xmonadctl_compile || error "Error compiling the xmonadctl script!"
+xmonadctl_compile || echo "Compiling the xmonadctl script failed!"
 
 PS3='Set default user shell (enter number): '
 shells=("fish" "bash" "zsh" "quit")

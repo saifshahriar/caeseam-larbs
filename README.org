@@ -350,7 +350,7 @@ xmonadctl_compile() { \
     ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
 }
 
-xmonadctl_compile || error "Error compiling the xmonadctl script!"
+xmonadctl_compile || echo "Compiling the xmonadctl script failed!"
 #+end_src
 
 * Set default USER shell
