@@ -249,7 +249,7 @@ read -p "Do you wish to install Awesome? (Yy/Nn)" yn
         [Yy]* ) sudo pacman -Sy awesome dtos-awesome ;
                 break;;
         [Nn]* ) echo "You choose not to install Awesome.";
-                exit;;
+                break;;
         ,* ) echo "Please answer yes or no.";;
     esac
 done
