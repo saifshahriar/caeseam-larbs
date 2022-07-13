@@ -176,7 +176,7 @@ xmonad_recompile() { \
     xmonad --recompile
 }
 
-xmonad_recompile || error "Error recompiling Xmonad!"
+xmonad_recompile || echo "Recompiling Xmonad failed!"
 
 xmonadctl_compile() { \
     echo "####################################"
