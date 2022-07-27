@@ -315,8 +315,8 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 The following pacman hooks force xmonad to recompile every time there are updates to xmonad or the haskell libraries.
 #+begin_src bash
 [ ! -d /etc/pacman.d/hooks ] && sudo mkdir /etc/pacman.d/hooks
-sudo cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
-sudo cp /etc/dtos/.xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
+sudo cp /etc/dtos/.config/xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
+sudo cp /etc/dtos/.config/xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
 #+end_src
 
 * Copy dmscripts config and set important variables
@@ -349,7 +349,7 @@ xmonadctl_compile() { \
     echo "####################################"
     echo "## Compiling the xmonadctl script ##"
     echo "####################################"
-    ghc -dynamic "$HOME"/.xmonad/xmonadctl.hs
+    ghc -dynamic "$HOME"/.config/xmonad/xmonadctl.hs
 }
 
 xmonadctl_compile || echo "Compiling the xmonadctl script failed!"
