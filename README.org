@@ -212,7 +212,7 @@ addkeyserver || error "Error adding keyservers to /etc/pacman.d/gnupg/gpg.conf"
 * Receiving the PGP key
 #+begin_src bash
 receive_key() { \
-    local _pgpkey="C71486C31555B12E"
+    local _pgpkey="A62D56CABD8DD76E"
     echo "#####################################"
     echo "## Adding PGP key $_pgpkey ##"
     echo "#####################################"
