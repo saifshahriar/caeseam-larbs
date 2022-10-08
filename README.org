@@ -55,7 +55,7 @@ cd dtos/
 
 ** Potential bugs
 *** Does DTOS run on Artix?
-No.  Arch Linux and its popular derivatives (Arco, Endeavour, Garuda, Manjaro, etc.) all use systemd.  After all, it is a Linux standard now and virtually all of the mainstream distros use systemd.  Artix is unique in that it is a =protest distro= and a fork of Arch built around the dislike of systemd.  The DTOS installation script assumes that systemd is installed and does try to execute some systemctl commands.  Also, some of the programs that are installed (like dmscripts) assume systemd is installed. W ihile I have no issue with a =protest distro= like Artix existing, I am not interested in trying to make DTOS work with it at this time.
+No.  Arch Linux and its popular derivatives (Arco, Endeavour, Garuda, Manjaro, etc.) all use systemd.  After all, it is a Linux standard now and virtually all of the mainstream distros use systemd.  Artix is unique in that it is a =protest distro= and a fork of Arch built around the dislike of systemd.  The DTOS installation script assumes that systemd is installed and does try to execute some systemctl commands.  Also, some of the programs that are installed (like dmscripts) assume systemd is installed. While I have no issue with a =protest distro= like Artix existing, I am not interested in trying to make DTOS work with it at this time.
 *** Slow download times.
 This script can take a long time to complete since it will install more than 300 packages.  Also, make sure that the Linux distro that you are installing this on uses ParallelDownloads in /etc/pacman.conf for faster download times!  For an example, to enable ParallelDownloads so it downloads up to five packages at a time:
 
