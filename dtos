@@ -97,12 +97,16 @@ receive_key() { \
 gum spin --spinner points --title "Adding PGP key $_pgpkey"  -- sudo pacman-key --recv-key $_pgpkey && sudo pacman-key --lsign-key $_pgpkey
 }
 
+rebootmsg() { \
+    gum confirm "Installing DTOS!" --affirmative="Continue" --negative="Exit" || error "User choose to exit.
+}
+
 receive_key || error "Error receiving PGP key $_pgpkey"
 
 gum style \
 	--foreground 212 --border-foreground 212 --border double \
 	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'CHOOSE YOUR WINDOW MANAGER(S) ' 'Choices are: xmonad, awesome, & qtile.' 'You should choose at least one, otherwise,' 'you will not have a graphical environment.' 'If unsure, Xmonad is the recommended choice.'
+	'CHOOSE YOUR WINDOW MANAGER\(S\) ' 'Choices are: xmonad, awesome, & qtile.' 'You should choose at least one, otherwise,' 'you will not have a graphical environment.' 'If unsure, Xmonad is the recommended choice.'
 
 while true; do
     read -p "Do you wish to install XMonad? (Yy/Nn)" yn
@@ -152,7 +156,7 @@ gum spin --spinner dot --title "Compiling the xmonadctl script"  -- ghc -dynamic
 echo "Set default user shell"
 choice=$(gum choose "fish" "bash" "zsh")
 sudo chsh $USER -s "/bin/$choice" && \
-echo -e "$choice has been set as your default USER shell. \
+echo -e "$choice has been set as your default USER shell." \
 
 # Disable the current login manager
 sudo systemctl disable $(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}') || echo "Cannot disable current display manager."
