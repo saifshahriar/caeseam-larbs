@@ -8,7 +8,7 @@
 # NAME: DTOS
 # DESC: An installation and deployment script for DT's Xmonad desktop.
 # WARNING: Run this script at your own risk.
-# DEPENDENCIES: gum
+# DEPENDENCIES: dialog
 
 if [ "$(id -u)" = 0 ]; then
     echo "##################################################################"
@@ -25,34 +25,23 @@ error() { \
     clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
 }
 
-echo "##########################################################################"
-echo "## Syncing the repos and installing 'gum' if not installed ##"
-echo "##########################################################################"
-sudo pacman --noconfirm --needed -Syu gum || error "Error syncing the repos."
+echo "################################################################"
+echo "## Syncing the repos and installing 'dialog' if not installed ##"
+echo "################################################################"
+sudo pacman --noconfirm --needed -Syu dialog || error "Error syncing the repos."
 
 welcome() { \
-    gum style \
-	--foreground 212 --border-foreground 212 --border double \
-	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'This is a script that will install what 'I sarcastically call DTOS \(DT\'s operating system\).' 'It\'s really just an installation script for those that want to try out' 'my tiling window manager configurations and associated programs.' 'You will be asked to enter your sudo password' 'at various points during this installation,' 'so stay near the computer.' 'DT \(Derek Taylor, aka DistroTube\)'
+    dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4This is a script that will install what I sarcastically call DTOS (DT's operating system).  It's really just an installation script for those that want to try out my tiling window manager configurations and associated programs.  You will be asked to enter your sudo password at various points during this installation, so stay near the computer.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
 }
 
 welcome || error "User choose to exit."
 
 speedwarning() { \
-    gum style \
-	--foreground 212 --border-foreground 212 --border double \
-	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'WARNING!' 'The ParallelDownloads option is not enabled in /etc/pacman.conf.' 'This may result in slower installation speeds.' 'Are you sure you want to continue?'
-    gum confirm "Installing DTOS!" --affirmative="Continue" --negative="Exit" || error "User choose to exit.
+    dialog --colors --title "\Z7\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! The ParallelDownloads option is not enabled in /etc/pacman.conf. This may result in slower installation speeds. Are you sure you want to continue?" 16 60 || error "User choose to exit."
 }
 
 distrowarning() { \
-    gum style \
-	--foreground 212 --border-foreground 212 --border double \
-	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'WARNING!' 'While this script works on all Arch based distros,' 'some distros choose to package certain things that we also package,' 'please look at the package list and remove conflicts manually.' 'Are you sure you want to continue?'
-    gum confirm "Installing DTOS!" --affirmative="Continue" --negative="Exit" || error "User choose to exit.
+    dialog --colors --title "\Z7\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! While this script works on all Arch based distros, some distros choose to package certain things that we also package, please look at the package list and remove conflicts manually. Are you sure you want to continue?" 16 60 || error "User choose to exit."
 }
 
 grep -qs "#ParallelDownloads" /etc/pacman.conf && speedwarning
@@ -60,26 +49,24 @@ grep -qs "ID=arch" /etc/os-release || distrowarning
 
 localewarning() { \
         [[ -z $LANG || -z $LC_CTYPE ]] && \
-        gum style \
-	--foreground 212 --border-foreground 212 --border double \
-	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'Installing DTOS!' 'WARNING! Your locales have not been set!' 'Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf.' '\(NOTE: they should both be the same\)' 'Run 'sudo locale-gen', reboot and run the script again.' 'You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale'
+        dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! Your locales have not been set! Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf (NOTE: they should both be the same). Run 'sudo locale-gen', reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale" 16 60 && error "Your locales have not been set! Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf (NOTE: they should both be the same). Run 'sudo locale-gen', reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale"
 }
 
 localewarning
 
 lastchance() { \
-gum style \
-	--foreground 212 --border-foreground 212 --border double \
-	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'Installing DTOS!' 'WARNING! The DTOS installation script is currently in public beta testing.' 'There are almost certainly errors in it' 'therefore, it is strongly recommended that you not install this on production machines.' 'It is recommended that you try this out in either a virtual machine or on a test machine.'
-    gum confirm "Are You Sure You Want To Do This?" --affirmative="Begin Installation" --negative="Exit" || { clear; exit 1; }
+    dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
+
+    dialog --colors --title "\Z7\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z4Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
 }
 
 lastchance || error "User choose to exit."
 
 addrepo() { \
-    gum spin --spinner jump --title "Adding the DTOS core repository to /etc/pacman.conf" -- grep -qxF "[dtos-core-repo]" /etc/pacman.conf ||
+    echo "#########################################################"
+    echo "## Adding the DTOS core repository to /etc/pacman.conf ##"
+    echo "#########################################################"
+    grep -qxF "[dtos-core-repo]" /etc/pacman.conf ||
         ( echo " "; echo "[dtos-core-repo]"; echo "SigLevel = Required DatabaseOptional"; \
         echo "Server = https://gitlab.com/dtos/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
 }
@@ -87,26 +74,33 @@ addrepo() { \
 addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
 
 addkeyserver() { \
-    gum spin --spinner minidot --title "Adding keyservers to /etc/pacman.d/gnupg/gpg.conf"  -- grep -qxF "keyserver.ubuntu.com:80" /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkp://keyserver.ubuntu.com:80" | sudo tee -a /etc/pacman.d/gnupg/gpg.conf && grep -qxF "keyserver.ubuntu.com:443" /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkps://keyserver.ubuntu.com:443" | sudo tee -a /etc/pacman.d/gnupg/gpg.conf
+    echo "#######################################################"
+    echo "## Adding keyservers to /etc/pacman.d/gnupg/gpg.conf ##"
+    echo "#######################################################"
+    grep -qxF "keyserver.ubuntu.com:80" /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkp://keyserver.ubuntu.com:80" | sudo tee -a /etc/pacman.d/gnupg/gpg.conf
+    grep -qxF "keyserver.ubuntu.com:443" /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkps://keyserver.ubuntu.com:443" | sudo tee -a /etc/pacman.d/gnupg/gpg.conf
 }
 
 addkeyserver || error "Error adding keyservers to /etc/pacman.d/gnupg/gpg.conf"
 
 receive_key() { \
-    local _pgpkey="C71486C31555B12E"
-gum spin --spinner points --title "Adding PGP key $_pgpkey"  -- sudo pacman-key --recv-key $_pgpkey && sudo pacman-key --lsign-key $_pgpkey
-}
-
-rebootmsg() { \
-    gum confirm "Installing DTOS!" --affirmative="Continue" --negative="Exit" || error "User choose to exit.
+    local _pgpkey="A62D56CABD8DD76E"
+    echo "#####################################"
+    echo "## Adding PGP key $_pgpkey ##"
+    echo "#####################################"
+    sudo pacman-key --recv-key $_pgpkey
+    sudo pacman-key --lsign-key $_pgpkey
 }
 
 receive_key || error "Error receiving PGP key $_pgpkey"
 
-gum style \
-	--foreground 212 --border-foreground 212 --border double \
-	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'CHOOSE YOUR WINDOW MANAGER\(S\) ' 'Choices are: xmonad, awesome, & qtile.' 'You should choose at least one, otherwise,' 'you will not have a graphical environment.' 'If unsure, Xmonad is the recommended choice.'
+echo "##################################################"
+echo "##        CHOOSE YOUR WINDOW MANAGER(S)         ##"
+echo "##    Choices are: xmonad, awesome, & qtile.    ##"
+echo "##  You should choose at least one, otherwise,  ##"
+echo "##  you will not have a graphical environment.  ##"
+echo "## If unsure, Xmonad is the recommended choice. ##"
+echo "##################################################"
 
 while true; do
     read -p "Do you wish to install XMonad? (Yy/Nn)" yn
@@ -144,28 +138,82 @@ done
 # Let's install each package listed in the pkglist.txt file.
 sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install required packages."
 
-gum spin --spinner line --title "Copying DTOS configuration files from /etc/dtos into \$HOME"  -- ./DTcfg 
+echo "################################################################"
+echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
+echo "################################################################"
+[ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
+[ -d /etc/dtos ] && mkdir ~/dtos-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/dtos ~/dtos-backup-$(date +%Y.%m.%d-%H%M)
+[ ! -d ~/.config ] && mkdir ~/.config
+[ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
+cd /etc/dtos && cp -Rf . ~ && cd -
 
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
 
-gum spin --spinner line --title "Installing Doom Emacs. This may take a few minutes."  -- ./DoomEmacs || echo "Doom Emacs Installation failed!"
-gum spin --spinner line --title "Recompiling XMonad"  -- xmonad --recompile || echo "Recompiling Xmonad failed!"
-gum spin --spinner dot --title "Compiling the xmonadctl script"  -- ghc -dynamic "$HOME"/.config/xmonad/xmonadctl.hs || echo "Compiling the xmonadctl script failed!"
+echo "#########################################################"
+echo "## Installing Doom Emacs. This may take a few minutes. ##"
+echo "#########################################################"
+[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
+[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom --force install
+~/.emacs.d/bin/doom sync
 
-echo "Set default user shell"
-choice=$(gum choose "fish" "bash" "zsh")
-sudo chsh $USER -s "/bin/$choice" && \
-echo -e "$choice has been set as your default USER shell." \
+[ ! -d /etc/pacman.d/hooks ] && sudo mkdir /etc/pacman.d/hooks
+sudo cp /etc/dtos/.config/xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
+sudo cp /etc/dtos/.config/xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman.d/hooks/
+
+[ ! -d $HOME/.config/dmscripts ] && mkdir $HOME/.config/dmscripts
+cp /etc/dmscripts/config $HOME/.config/dmscripts/config
+sed -i 's/DMBROWSER=\"brave\"/DMBROWSER=\"qutebrowser\"/g' $HOME/.config/dmscripts/config
+sed -i 's/DMTERM=\"st -e\"/DMTERM=\"alacritty -e\"/g' $HOME/.config/dmscripts/config
+sed -i 's/setbg_dir=\"${HOME}\/Pictures\/Wallpapers\"/setbg_dir=\"\/usr\/share\/backgrounds\/dtos-backgrounds\"/g' $HOME/.config/dmscripts/config
+
+xmonad_recompile() { \
+    echo "########################"
+    echo "## Recompiling XMonad ##"
+    echo "########################"
+    xmonad --recompile
+}
+
+xmonad_recompile || echo "Recompiling Xmonad failed!"
+
+xmonadctl_compile() { \
+    echo "####################################"
+    echo "## Compiling the xmonadctl script ##"
+    echo "####################################"
+    ghc -dynamic "$HOME"/.config/xmonad/xmonadctl.hs
+}
+
+xmonadctl_compile || echo "Compiling the xmonadctl script failed!"
+
+PS3='Set default user shell (enter number): '
+shells=("fish" "bash" "zsh" "quit")
+select choice in "${shells[@]}"; do
+    case $choice in
+         fish | bash | zsh)
+            sudo chsh $USER -s "/bin/$choice" && \
+            echo -e "$choice has been set as your default USER shell. \
+                    \nLogging out is required for this take effect."
+            break
+            ;;
+         quit)
+            echo "User quit without changing shell."
+            break
+            ;;
+         *)
+            echo "invalid option $REPLY"
+            ;;
+    esac
+done
 
 # Disable the current login manager
 sudo systemctl disable $(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}') || echo "Cannot disable current display manager."
 # Enable sddm as login manager
 sudo systemctl enable sddm
-gum style \
-	--foreground 212 --border-foreground 212 --border double \
-	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'Enable sddm as login manager.'
+echo "###################################"
+echo "## Enable sddm as login manager. ##"
+echo "###################################"
 
 ## Make multicolor-sddm-theme the default sddm theme ##
 # This is the sddm system configuration file.
@@ -188,9 +236,17 @@ gum style \
     sudo cp /etc/sddm.conf.d/kde_settings.conf /etc/sddm.conf.d/kde_settings.backup && \
     sudo sed -i 's/^Current=*.*/Current=multicolor-sddm-theme/g' /etc/sddm.conf.d/kde_settings.conf
 
-gum style \
-	--foreground 212 --border-foreground 212 --border double \
-	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'DTOS' 'has been installed!'
+echo "##############################"
+echo "## DTOS has been installed! ##"
+echo "##############################"
 
-gum confirm "Do you want to reboot?" && reboot || echo "Welcome to the world of DTOS!"
+while true; do
+    read -p "Do you want to reboot to get your dtos? [Y/n] " yn
+    case $yn in
+        [Yy]* ) reboot;;
+        [Nn]* ) break;;
+        "" ) reboot;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+

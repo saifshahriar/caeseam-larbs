@@ -35,7 +35,6 @@ exa
 fd
 fish
 git
-gum
 htop
 libxft
 lolcat
