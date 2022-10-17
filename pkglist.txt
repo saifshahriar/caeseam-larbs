@@ -36,7 +36,7 @@ fd
 fish
 git
 htop
-libxft-bgra
+libxft
 lolcat
 lxappearance
 lxsession
