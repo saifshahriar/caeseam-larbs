@@ -34,7 +34,7 @@ welcome() { \
     gum style \
 	--foreground 212 --border-foreground 212 --border double \
 	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'This is a script that will install what 'I sarcastically call DTOS (DT\'s operating system).' 'It\'s really just an installation script for those that want to try out' 'my tiling window manager configurations and associated programs.' 'You will be asked to enter your sudo password' 'at various points during this installation,' 'so stay near the computer.' 'DT (Derek Taylor, aka DistroTube)'
+	'This is a script that will install what 'I sarcastically call DTOS \(DT\'s operating system\).' 'It\'s really just an installation script for those that want to try out' 'my tiling window manager configurations and associated programs.' 'You will be asked to enter your sudo password' 'at various points during this installation,' 'so stay near the computer.' 'DT \(Derek Taylor, aka DistroTube\)'
 }
 
 welcome || error "User choose to exit."
@@ -63,7 +63,7 @@ localewarning() { \
         gum style \
 	--foreground 212 --border-foreground 212 --border double \
 	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'Installing DTOS!' 'WARNING! Your locales have not been set!' 'Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf.' '(NOTE: they should both be the same)' 'Run 'sudo locale-gen', reboot and run the script again.' 'You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale'
+	'Installing DTOS!' 'WARNING! Your locales have not been set!' 'Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf.' '\(NOTE: they should both be the same\)' 'Run 'sudo locale-gen', reboot and run the script again.' 'You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale'
 }
 
 localewarning
@@ -102,7 +102,7 @@ receive_key || error "Error receiving PGP key $_pgpkey"
 gum style \
 	--foreground 212 --border-foreground 212 --border double \
 	--align center --width 50 --margin "1 2" --padding "2 4" \
-	'CHOOSE YOUR WINDOW MANAGER(S) ' 'Choices are: xmonad, awesome, & qtile.' 'You should choose at least one, otherwise,' 'you will not have a graphical environment.' 'If unsure, Xmonad is the recommended choice.'
+	'CHOOSE YOUR WINDOW MANAGER\(S\) ' 'Choices are: xmonad, awesome, & qtile.' 'You should choose at least one, otherwise,' 'you will not have a graphical environment.' 'If unsure, Xmonad is the recommended choice.'
 
 while true; do
     read -p "Do you wish to install XMonad? (Yy/Nn)" yn
