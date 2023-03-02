@@ -245,6 +245,30 @@ while true; do
     esac
 done
 
+if [ -d "/etc/dtos/.config/xmonad/" ]; then
+    PS3='What bar would you like to use with XMonad? (enter number): '
+    bars=("polybar" "xmobar" "both")
+    select choice in "${bars[@]}"; do
+        case $choice in
+             polybar)
+                sudo pacman -S dtos-polybar polybar
+                break
+                ;;
+             xmobar)
+                sudo pacman -S dtos-xmobar xmobar
+                break
+                ;;
+             both)
+                sudo pacman -S dtos-polybar dtos-xmobar polybar xmobar
+                break
+                ;;
+             *)
+                echo "Invalid option $REPLY. You must choose a valid option."
+                ;;
+        esac
+    done
+fi
+
 while true; do
 read -p "Do you wish to install Awesome? (Yy/Nn)" yn
     case $yn in
