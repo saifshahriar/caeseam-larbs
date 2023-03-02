@@ -28,6 +28,7 @@
 - [[#installing-window-managers][Installing window manager(s)]]
 - [[#install-the-packages-from-repositories][Install the packages from repositories]]
 - [[#copy-configs-over-from-etcdtos-into-home][Copy configs over from /etc/dtos into $HOME]]
+- [[#choosing-a-bar-for-xmonad][Choosing a Bar for XMonad]]
 - [[#install-doom-emacs][Install Doom Emacs]]
 - [[#copy-pacman-hooks][Copy pacman hooks]]
 - [[#copy-dmscripts-config-and-set-important-variables][Copy dmscripts config and set important variables]]
@@ -245,30 +246,6 @@ while true; do
     esac
 done
 
-if [ -d "/etc/dtos/.config/xmonad/" ]; then
-    PS3='What bar would you like to use with XMonad? (enter number): '
-    bars=("polybar" "xmobar" "both")
-    select choice in "${bars[@]}"; do
-        case $choice in
-             polybar)
-                sudo pacman -S dtos-polybar polybar
-                break
-                ;;
-             xmobar)
-                sudo pacman -S dtos-xmobar xmobar
-                break
-                ;;
-             both)
-                sudo pacman -S dtos-polybar dtos-xmobar polybar xmobar
-                break
-                ;;
-             *)
-                echo "Invalid option $REPLY. You must choose a valid option."
-                ;;
-        esac
-    done
-fi
-
 while true; do
 read -p "Do you wish to install Awesome? (Yy/Nn)" yn
     case $yn in
@@ -321,6 +298,37 @@ cd /etc/dtos && cp -Rf . ~ && cd -
 #+begin_src bash
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
+#+end_src
+
+* Choosing a Bar for XMonad
+#+begin_src bash
+if [ -d "/etc/dtos/.config/xmonad/" ]; then
+    PS3='What bar would you like to use with XMonad? (enter number): '
+    bars=("polybar" "xmobar" "both")
+    select choice in "${bars[@]}"; do
+        case $choice in
+             polybar)
+                sudo pacman -S dtos-polybar polybar
+                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs $HOME/.config/xmonad/xmonad.hs
+                break
+                ;;
+             xmobar)
+                sudo pacman -S dtos-xmobar xmobar
+                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-xmobar.hs $HOME/.config/xmonad/xmonad.hs
+                break
+                ;;
+             both)
+                sudo pacman -S dtos-polybar dtos-xmobar polybar xmobar
+                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs $HOME/.config/xmonad/xmonad.hs
+                break
+                ;;
+             ,*)
+                echo "Invalid option $REPLY. You must choose a valid option."
+                ;;
+        esac
+    done
+fi
+
 #+end_src
 
 * Install Doom Emacs
