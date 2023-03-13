@@ -20,8 +20,8 @@
 - [[#sync-the-repos-and-install-dialog][Sync the repos and install 'dialog']]
 - [[#welcome-message][Welcome message]]
 - [[#warning-the-user-about-potential-problems][Warning the user about potential problems]]
-- [[#confirming-locales-are-set][Confirming locales are set]]
 - [[#asking-user-to-confirm-choice-to-install-dtos][Asking user to confirm choice to install DTOS.]]
+- [[#checking-localeconf][Checking locale.conf]]
 - [[#adding-dtos-repo-to-pacmanconf][Adding DTOS repo to pacman.conf.]]
 - [[#adding-keyservers-to-gpgconf][Adding keyservers to gpg.conf.]]
 - [[#receiving-the-pgp-key][Receiving the PGP key]]
@@ -162,16 +162,6 @@ grep -qs "#ParallelDownloads" /etc/pacman.conf && speedwarning
 grep -qs "ID=arch" /etc/os-release || distrowarning
 #+end_src
 
-* Confirming locales are set
-#+begin_src bash
-localewarning() { \
-        [[ -z $LANG || -z $LC_CTYPE ]] && \
-        dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! Your locales have not been set! Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf (NOTE: they should both be the same). Run 'sudo locale-gen', reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale" 16 60 && error "Your locales have not been set! Please check that both the LANG and LC_CTYPE variables are set to the appropriate locale in /etc/locale.conf (NOTE: they should both be the same). Run 'sudo locale-gen', reboot and run the script again. You can reference the Arch Wiki while doing so: https://wiki.archlinux.org/title/locale"
-}
-
-localewarning
-#+end_src
-
 * Asking user to confirm choice to install DTOS.
 #+begin_src bash
 lastchance() { \
@@ -181,6 +171,13 @@ lastchance() { \
 }
 
 lastchance || error "User choose to exit."
+#+end_src
+
+* Checking locale.conf
+For some users, the LC_CTYPE variable is needed in the /etc/locale.conf for some programs (like dmenu) to work properly.  The following checks if the LC_CTYPE has been set.  If it has not been set, it will automatically be created using the same value as your LANG variable.  Then, a 'sudo locale-gen' will be run to generate the new locale settings.  These will take effect upon a reboot which should be done anyway once the DTOS installation has completed.
+#+begin_src bash
+grep "LC_CTYPE" /etc/locale.conf && echo "Checking the LC_CYPE variable in /etc/locale.conf. Variable is already set." || grep "LANG=" /etc/locale.conf | sed 's/LANG=/LC_CTYPE=/g' | sudo tee -a /etc/locale.conf
+sudo locale-gen
 #+end_src
 
 * Adding DTOS repo to pacman.conf.
