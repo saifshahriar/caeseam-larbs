@@ -31,26 +31,26 @@ echo "################################################################"
 sudo pacman --noconfirm --needed -Syu dialog || error "Error syncing the repos."
 
 welcome() { \
-    dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4This is a script that will install what I sarcastically call DTOS (DT's operating system).  It's really just an installation script for those that want to try out my tiling window manager configurations and associated programs.  You will be asked to enter your sudo password at various points during this installation, so stay near the computer.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
+    dialog --colors --title "\Z0\ZbInstalling DTOS!" --msgbox "\Z4This is a script that will install what I sarcastically call DTOS (DT's operating system).  It's really just an installation script for those that want to try out my tiling window manager configurations and associated programs.  You will be asked to enter your sudo password at various points during this installation, so stay near the computer.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
 }
 
 welcome || error "User choose to exit."
 
 speedwarning() { \
-    dialog --colors --title "\Z7\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! The ParallelDownloads option is not enabled in /etc/pacman.conf. This may result in slower installation speeds. Are you sure you want to continue?" 16 60 || error "User choose to exit."
+    dialog --colors --title "\Z0\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! The ParallelDownloads option is not enabled in /etc/pacman.conf. This may result in slower installation speeds. Are you sure you want to continue?" 16 60 || error "User choose to exit."
 }
 
 distrowarning() { \
-    dialog --colors --title "\Z7\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! While this script works on all Arch based distros, some distros choose to package certain things that we also package, please look at the package list and remove conflicts manually. Are you sure you want to continue?" 16 60 || error "User choose to exit."
+    dialog --colors --title "\Z0\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! While this script works on all Arch based distros, some distros choose to package certain things that we also package, please look at the package list and remove conflicts manually. Are you sure you want to continue?" 16 60 || error "User choose to exit."
 }
 
 grep -qs "#ParallelDownloads" /etc/pacman.conf && speedwarning
 grep -qs "ID=arch" /etc/os-release || distrowarning
 
 lastchance() { \
-    dialog --colors --title "\Z7\ZbInstalling DTOS!" --msgbox "\Z4WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
+    dialog --colors --title "\Z0\ZbInstalling DTOS!" --msgbox "\Z4WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
 
-    dialog --colors --title "\Z7\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z4Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
+    dialog --colors --title "\Z0\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z4Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
 }
 
 lastchance || error "User choose to exit."
@@ -90,47 +90,31 @@ receive_key() { \
 
 receive_key || error "Error receiving PGP key $_pgpkey"
 
-echo "##################################################"
-echo "##        CHOOSE YOUR WINDOW MANAGER(S)         ##"
-echo "##    Choices are: xmonad, awesome, & qtile.    ##"
-echo "##  You should choose at least one, otherwise,  ##"
-echo "##  you will not have a graphical environment.  ##"
-echo "## If unsure, Xmonad is the recommended choice. ##"
-echo "##################################################"
+choosewm() { \
+    dialog --colors --title "\Z0\ZbCHOOSE YOUR WINDOW MANAGER(S)" --msgbox "\Z0Choice at least one window manager to install. The choices are: Xmonad, Awwesome, and Qtile.  If unsure, Xmonad is the recommended choice, or install all three options and try each of them." 16 60
+}
 
-while true; do
-    read -p "Do you wish to install XMonad? (Yy/Nn)" yn
-    case $yn in
-        [Yy]* ) sudo pacman -Sy xmonad xmonad-contrib xmobar dtos-xmonad dtos-xmobar;
-                break;;
-        [Nn]* ) echo "You choose not to install XMonad.";
-                break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+installxmonad() { \
+    dialog --colors --title "\Z0\ZbWindow Managers - Xmonad" --yes-label "Yes" --no-label "No" --yesno "\Z0Would you like to install Xmonad?" 8 60
+}
 
-while true; do
-read -p "Do you wish to install Awesome? (Yy/Nn)" yn
-    case $yn in
-        [Yy]* ) sudo pacman -Sy awesome dtos-awesome ;
-                break;;
-        [Nn]* ) echo "You choose not to install Awesome.";
-                break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+installawesome() { \
+    dialog --colors --title "\Z0\ZbWindow Managers - Awesome" --yes-label "Yes" --no-label "No" --yesno "\Z0Would you like to install Awesome?" 8 60
+}
 
-while true; do
-    read -p "Do you wish to install Qtile? (Yy/Nn)" yn
-    case $yn in
-        [Yy]* ) sudo pacman -Sy qtile dtos-qtile ;
-                break;;
-        [Nn]* ) echo "You choose not to install Qtile." ;
-                break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+installqtile() { \
+    dialog --colors --title "\Z0\ZbWindow Managers - Qtile" --yes-label "Yes" --no-label "No" --yesno "\Z0Would you like to install Qtile?" 8 60
+}
 
+choosewm || error "User chose to exit"
+
+installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || echo "Not installing XMonad"
+
+installawesome && sudo pacman -Sy awesome dtos-awesome || echo "Not installing Awesome"
+
+installqtile && sudo pacman -Sy qtile dtos-qtile || echo "Not installing Qtile"
+
+echo "Now installing the rest of the DTOS packages."
 # Let's install each package listed in the pkglist.txt file.
 sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install required packages."
 
@@ -152,18 +136,15 @@ if [ -d "/etc/dtos/.config/xmonad/" ]; then
     select choice in "${bars[@]}"; do
         case $choice in
              polybar)
-                sudo pacman -S dtos-polybar polybar
                 cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs $HOME/.config/xmonad/xmonad.hs
                 break
                 ;;
              xmobar)
-                sudo pacman -S dtos-xmobar xmobar
                 cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-xmobar.hs $HOME/.config/xmonad/xmonad.hs
                 break
                 ;;
              both)
-                sudo pacman -S dtos-polybar dtos-xmobar polybar xmobar
-                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs $HOME/.config/xmonad/xmonad.hs
+                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-xmobar.hs $HOME/.config/xmonad/xmonad.hs
                 break
                 ;;
              *)

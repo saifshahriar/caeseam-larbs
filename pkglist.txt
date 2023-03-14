@@ -88,4 +88,5 @@ xterm
 xwallpaper
 yad
 zathura
+zathura-pdf-poppler
 zsh
