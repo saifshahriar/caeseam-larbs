@@ -18,15 +18,18 @@ checkbox=black,blue
 compactbutton=black,blue
 button=black,red'
 
+## The following three functions are defined here for convenience.
+## All three functions are used in each of the five window functions.
 programchoices () {
     choices=()
     for key in "${!checkboxes[@]}"
     do
-        spacer=$(for i in $(seq 1 38); do echo -n " "; done)
         # A portable way to check if a command exists in $PATH and is executable.
         # If it doesn't exist, we set the tick box to OFF.
         # If it exists, then we set the tick box to ON.
         if ! [ -x "$(command -v ${checkboxes[$key]})" ]; then
+            # $spacer length is defined in the individual window functions based
+            # on the needed length to make the checkbox wide enough to fit window.
             choices+=("${key}" "${spacer}" "OFF")
         else
             choices+=("${key}" "${spacer}" "ON")
@@ -55,17 +58,18 @@ exitorinstall() {
         # Otherwise, pacman is not going to like how we feed it.
         programs=$(echo $result | sed 's/" /\n/g' | sed 's/"//g' )
         echo $programs
-        paru --needed --ask 4 -Sy $programs || \
+        paru --needed --ask 4 -Sy "$programs" || \
         echo "Failed to install required packages."
     else
         echo "User selected Cancel."
     fi
 }
 
-
+## The five individual window functions
 browsers () {
     title="Web Browsers"
     text="Select one or more web browsers to install.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 38); do echo -n " "; done)
 
     # Create an array with KEY/VALUE pairs.
     # The first ["KEY] is the name of the package to install.
@@ -89,6 +93,7 @@ browsers () {
 otherinternet () {
     title="Other Internet Programs"
     text="Other Internet programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 47); do echo -n " "; done)
 
     # Create an array with KEY/VALUE pairs.
     # The first ["KEY] is the name of the package to install.
@@ -112,6 +117,7 @@ otherinternet () {
 multimedia() {
     title="Multimedia Programs"
     text="Multimedia programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 53); do echo -n " "; done)
 
     # Create an array with KEY/VALUE pairs.
     # The first ["KEY] is the name of the package to install.
@@ -135,6 +141,7 @@ multimedia() {
 office() {
     title="Office Programs"
     text="Office and productivity programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 46); do echo -n " "; done)
 
     # Create an array with KEY/VALUE pairs.
     # The first ["KEY] is the name of the package to install.
@@ -155,6 +162,7 @@ office() {
 games () {
     title="Games"
     text="Gaming programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 51); do echo -n " "; done)
 
     # Create an array with KEY/VALUE pairs.
     # The first ["KEY] is the name of the package to install.
