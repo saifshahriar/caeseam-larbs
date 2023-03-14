@@ -8,7 +8,7 @@
 # NAME: DTOS
 # DESC: An installation and deployment script for DT's Xmonad desktop.
 # WARNING: Run this script at your own risk.
-# DEPENDENCIES: dialog
+# DEPENDENCIES: libnewt (probably already on the system)
 
 if [ "$(id -u)" = 0 ]; then
     echo "##################################################################"
@@ -25,32 +25,45 @@ error() { \
     clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
 }
 
-echo "################################################################"
-echo "## Syncing the repos and installing 'dialog' if not installed ##"
-echo "################################################################"
-sudo pacman --noconfirm --needed -Syu dialog || error "Error syncing the repos."
+export NEWT_COLORS='
+root=,blue
+window=,black
+shadow=,blue
+border=blue,black
+title=blue,black
+textbox=blue,black
+radiolist=black,black
+label=black,blue
+checkbox=black,blue
+compactbutton=black,blue
+button=black,red'
+
+echo "##################################################################"
+echo "## Syncing the repos and installing 'whiptail' if not installed ##"
+echo "##################################################################"
+sudo pacman --noconfirm --needed -Syu libnewt || error "Error syncing the repos."
 
 welcome() { \
-    dialog --colors --title "\Z0\ZbInstalling DTOS!" --msgbox "\Z4This is a script that will install what I sarcastically call DTOS (DT's operating system).  It's really just an installation script for those that want to try out my tiling window manager configurations and associated programs.  You will be asked to enter your sudo password at various points during this installation, so stay near the computer.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
+    whiptail --title "Installing DTOS!" --msgbox "This is a script that will install what I sarcastically call DTOS (DT's operating system).  It's really just an installation script for those that want to try out my tiling window manager configurations and associated programs.  You will be asked to enter your sudo password at various points during this installation, so stay near the computer.\\n\\n-DT (Derek Taylor, aka DistroTube)" 16 60
 }
 
 welcome || error "User choose to exit."
 
 speedwarning() { \
-    dialog --colors --title "\Z0\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! The ParallelDownloads option is not enabled in /etc/pacman.conf. This may result in slower installation speeds. Are you sure you want to continue?" 16 60 || error "User choose to exit."
+    whiptail --title "Installing DTOS!" --yesno "WARNING! The ParallelDownloads option is not enabled in /etc/pacman.conf. This may result in slower installation speeds. Are you sure you want to continue?" 16 60 || error "User choose to exit."
 }
 
 distrowarning() { \
-    dialog --colors --title "\Z0\ZbInstalling DTOS!" --yes-label "Continue" --no-label "Exit" --yesno  "\Z4WARNING! While this script works on all Arch based distros, some distros choose to package certain things that we also package, please look at the package list and remove conflicts manually. Are you sure you want to continue?" 16 60 || error "User choose to exit."
+    whiptail --title "Installing DTOS!" --msgbox "WARNING! While this script works on all Arch based distros, some distros choose to package certain things that we also package, which may result in errors when trying to install DTOS packages. If this happens, please look at the package list and remove conflicts manually." 16 60 || error "User choose to exit."
 }
 
 grep -qs "#ParallelDownloads" /etc/pacman.conf && speedwarning
 grep -qs "ID=arch" /etc/os-release || distrowarning
 
 lastchance() { \
-    dialog --colors --title "\Z0\ZbInstalling DTOS!" --msgbox "\Z4WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
+    whiptail --title "Installing DTOS!" --msgbox "WARNING! The DTOS installation script is currently in public beta testing. There are almost certainly errors in it; therefore, it is strongly recommended that you not install this on production machines. It is recommended that you try this out in either a virtual machine or on a test machine." 16 60
 
-    dialog --colors --title "\Z0\ZbAre You Sure You Want To Do This?" --yes-label "Begin Installation" --no-label "Exit" --yesno "\Z4Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
+    whiptail --title "Are You Sure You Want To Do This?" --yesno "Shall we begin installing DTOS?" 8 60 || { clear; exit 1; }
 }
 
 lastchance || error "User choose to exit."
@@ -90,20 +103,22 @@ receive_key() { \
 
 receive_key || error "Error receiving PGP key $_pgpkey"
 
+sudo pacman -S dtos-core-repo/paru-bin
+
 choosewm() { \
-    dialog --colors --title "\Z0\ZbCHOOSE YOUR WINDOW MANAGER(S)" --msgbox "\Z0Choice at least one window manager to install. The choices are: Xmonad, Awwesome, and Qtile.  If unsure, Xmonad is the recommended choice, or install all three options and try each of them." 16 60
+    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awwesome, and Qtile. If unsure, Xmonad is the recommended choice, or install all three options and try out each of them." 16 60
 }
 
 installxmonad() { \
-    dialog --colors --title "\Z0\ZbWindow Managers - Xmonad" --yes-label "Yes" --no-label "No" --yesno "\Z0Would you like to install Xmonad?" 8 60
+    whiptail --title "Window Managers - Xmonad" --yesno "Would you like to install Xmonad?" 8 60
 }
 
 installawesome() { \
-    dialog --colors --title "\Z0\ZbWindow Managers - Awesome" --yes-label "Yes" --no-label "No" --yesno "\Z0Would you like to install Awesome?" 8 60
+    whiptail --title "Window Managers - Awesome" --yesno "Would you like to install Awesome?" 8 60
 }
 
 installqtile() { \
-    dialog --colors --title "\Z0\ZbWindow Managers - Qtile" --yes-label "Yes" --no-label "No" --yesno "\Z0Would you like to install Qtile?" 8 60
+    whiptail --title "Window Managers - Qtile" --yesno "Would you like to install Qtile?" 8 60
 }
 
 choosewm || error "User chose to exit"
@@ -114,7 +129,160 @@ installawesome && sudo pacman -Sy awesome dtos-awesome || echo "Not installing A
 
 installqtile && sudo pacman -Sy qtile dtos-qtile || echo "Not installing Qtile"
 
-echo "Now installing the rest of the DTOS packages."
+programchoices () {
+    choices=()
+    for key in "${!checkboxes[@]}"
+    do
+        # A portable way to check if a command exists in $PATH and is executable.
+        # If it doesn't exist, we set the tick box to OFF.
+        # If it exists, then we set the tick box to ON.
+        if ! [ -x "$(command -v ${checkboxes[$key]})" ]; then
+            # $spacer length is defined in the individual window functions based
+            # on the needed length to make the checkbox wide enough to fit window.
+            choices+=("${key}" "${spacer}" "OFF")
+        else
+            choices+=("${key}" "${spacer}" "ON")
+        fi
+    done
+}
+
+selectedprograms() {
+    result=$(
+        # Creates the whiptail checklist. Also, we use a nifty
+        # trick to swap stdout and stderr.
+        whiptail --title "$title" \
+                 --checklist "$text" 22 78 12 \
+                 "${choices[@]}" \
+                 3>&2 2>&1 1>&3-
+    )
+}
+
+exitorinstall() {
+    exitstatus=$?
+    # Check the exit status, if 0 we will install the selected
+    # packages. A command which exits with zero (0) has succeeded.
+    # A non-zero (1-255) exit status indicates failure.
+    if [ $exitstatus = 0 ]; then
+        # Take the results and remove the "'s and add new lines.
+        # Otherwise, pacman is not going to like how we feed it.
+        programs=$(echo $result | sed 's/" /\n/g' | sed 's/"//g' )
+        echo $programs
+        paru --needed --ask 4 -Sy "$programs" || \
+        echo "Failed to install required packages."
+    else
+        echo "User selected Cancel."
+    fi
+}
+
+browsers () {
+    title="Web Browsers"
+    text="Select one or more web browsers to install.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 38); do echo -n " "; done)
+
+    local -A checkboxes
+    checkboxes["brave-bin"]="brave"
+    checkboxes["chromium"]="chromium"
+    checkboxes["firefox"]="firefox"
+    checkboxes["google-chrome"]="google-chrome-stable"
+    checkboxes["icecat-bin"]="icecat"
+    checkboxes["librewolf-bin"]="librewolf"
+    checkboxes["microsoft-edge-stable-bin"]="microsoft-edge-stable"
+    checkboxes["opera"]="opera"
+    checkboxes["qutebrowser"]="qutebrowser"
+    checkboxes["ungoogled-chromium-bin"]="ungoogled-chromium"
+    checkboxes["vivaldi"]="vivaldi"
+
+    programchoices && selectedprograms && exitorinstall
+}
+
+otherinternet () {
+    title="Other Internet Programs"
+    text="Other Internet programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 47); do echo -n " "; done)
+
+    local -A checkboxes
+    checkboxes["deluge"]="deluge"
+    checkboxes["discord"]="discord"
+    checkboxes["element-desktop"]="element-desktop"
+    checkboxes["filezilla"]="filezilla"
+    checkboxes["geary"]="geary"
+    checkboxes["hexchat"]="hexchat"
+    checkboxes["jitsi-meet-bin"]="jitsi-meet-desktop"
+    checkboxes["mailspring"""]="mailspring"
+    checkboxes["telegram-desktop"]="telegram"
+    checkboxes["thunderbird"]="thunderbird"
+    checkboxes["transmission-gtk"]="transmission-gtk"
+
+    programchoices && selectedprograms && exitorinstall
+}
+
+multimedia() {
+    title="Multimedia Programs"
+    text="Multimedia programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 53); do echo -n " "; done)
+
+    local -A checkboxes
+    checkboxes["blender"]="blender"
+    checkboxes["deadbeef"]="deadbeef"
+    checkboxes["gimp"]="gimp"
+    checkboxes["inkscape"]="inkscape"
+    checkboxes["kdenlive"]="kdenlive"
+    checkboxes["krita"]="krita"
+    checkboxes["mpv"]="mpv"
+    checkboxes["obs-studio"]="obs"
+    checkboxes["rhythmbox"]="rhythmbox"
+    checkboxes["ristretto"]="ristretto"
+    checkboxes["vlc"]="vlc"
+
+    programchoices && selectedprograms && exitorinstall
+}
+
+office() {
+    title="Office Programs"
+    text="Office and productivity programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 46); do echo -n " "; done)
+
+    local -A checkboxes
+    checkboxes["abiword"]="abiword"
+    checkboxes["evince"]="evince"
+    checkboxes["gnucash"]="gnucash"
+    checkboxes["gnumeric"]="gnumeric"
+    checkboxes["libreoffice-fresh"]="lowriter"
+    checkboxes["libreoffice-still"]="lowriter"
+    checkboxes["scribus"]="scribus"
+    checkboxes["zathura"]="zathura"
+
+    programchoices && selectedprograms && exitorinstall
+}
+
+games () {
+    title="Games"
+    text="Gaming programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 51); do echo -n " "; done)
+
+    local -A checkboxes
+    checkboxes["0ad"]="0ad"
+    checkboxes["gnuchess"]="gnuchess"
+    checkboxes["lutris"]="lutris"
+    checkboxes["neverball"]="neverball"
+    checkboxes["openarena"]="openarena"
+    checkboxes["steam"]="steam"
+    checkboxes["supertuxkart"]="supertuxkart"
+    checkboxes["sauerbraten"]="sauerbraten-client"
+    checkboxes["teeworlds"]="teeworlds"
+    checkboxes["veloren-bin"]="veloren"
+    checkboxes["wesnoth"]="wesnoth"
+    checkboxes["xonotic"]="xonotic-glx"
+
+    programchoices && selectedprograms && exitorinstall
+}
+
+browsers
+otherinternet
+multimedia
+office
+games
+
 # Let's install each package listed in the pkglist.txt file.
 sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install required packages."
 
@@ -136,15 +304,18 @@ if [ -d "/etc/dtos/.config/xmonad/" ]; then
     select choice in "${bars[@]}"; do
         case $choice in
              polybar)
+                sudo pacman -S dtos-polybar polybar
                 cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs $HOME/.config/xmonad/xmonad.hs
                 break
                 ;;
              xmobar)
+                sudo pacman -S dtos-xmobar xmobar
                 cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-xmobar.hs $HOME/.config/xmonad/xmonad.hs
                 break
                 ;;
              both)
-                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-xmobar.hs $HOME/.config/xmonad/xmonad.hs
+                sudo pacman -S dtos-polybar dtos-xmobar polybar xmobar
+                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs $HOME/.config/xmonad/xmonad.hs
                 break
                 ;;
              *)
