@@ -2,6 +2,7 @@ adapta-gtk-theme
 adobe-source-code-pro-fonts
 adobe-source-sans-fonts
 alacritty
+alsa-utils
 arc-gtk-theme
 arc-icon-theme
 aura
