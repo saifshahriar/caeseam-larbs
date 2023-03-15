@@ -255,7 +255,7 @@ receive_key || error "Error receiving PGP key $_pgpkey"
 Let's go ahead and install the paru AUR helper because some of the software that the user could choose to install is only found the AUR.
 
 #+begin_src bash
-sudo pacman --noconfirm --needed -Sy dtos-core-repo/paru-bin || error "Error syncing the repos."
+sudo pacman --noconfirm --needed -Sy dtos-core-repo/paru-bin || error "Error installing dtos-core-repo/paru-bin."
 
 #+end_src
 
@@ -263,7 +263,7 @@ sudo pacman --noconfirm --needed -Sy dtos-core-repo/paru-bin || error "Error syn
 
 #+begin_src bash
 choosewm() { \
-    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awwesome, and Qtile. If unsure, Xmonad is the recommended choice, or install all three options and try out each of them." 16 60
+    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awesome, and Qtile. If unsure, Xmonad is the recommended choice, or install all three options and try out each of them." 16 60
 }
 
 installxmonad() { \
