@@ -255,7 +255,7 @@ receive_key || error "Error receiving PGP key $_pgpkey"
 Let's go ahead and install the paru AUR helper because some of the software that the user could choose to install is only found the AUR.
 
 #+begin_src bash
-sudo pacman --noconfirm --needed -S dtos-core-repo/paru-bin || error "Error syncing the repos."
+sudo pacman --noconfirm --needed -Sy dtos-core-repo/paru-bin || error "Error syncing the repos."
 
 #+end_src
 
