@@ -88,6 +88,7 @@ xorg-xsetroot
 xterm
 xwallpaper
 yad
+youtube-dl
 zathura
 zathura-pdf-poppler
 zsh
