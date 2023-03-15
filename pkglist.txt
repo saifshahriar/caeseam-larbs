@@ -12,6 +12,7 @@ bluez-utils
 bash
 bat
 cups
+didyoumean
 dmenu-distrotube
 dmscripts
 dtos-alacritty
@@ -73,6 +74,7 @@ ttf-jetbrains-mono
 ttf-joypixels
 ttf-ms-fonts
 ttf-ubuntu-font-family
+translate-shell
 trayer
 vim
 volumeicon
