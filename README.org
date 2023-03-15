@@ -144,7 +144,7 @@ For more info on 'whiptail' see:
 https://en.wikibooks.org/wiki/Bash_Shell_Scripting/Whiptail
 
 #+begin_src bash
-export NEWT_COLORS='
+export NEWT_COLORS="
 root=,blue
 window=,black
 shadow=,blue
@@ -155,7 +155,7 @@ radiolist=black,black
 label=black,blue
 checkbox=black,blue
 compactbutton=black,blue
-button=black,red'
+button=black,red"
 
 #+end_src
 
@@ -292,14 +292,37 @@ installqtile && sudo pacman -Sy qtile dtos-qtile python-psutil || echo "Not inst
 The following three functions are defined here for convenience. All three of these functions are used in each of the five window functions below, so we define them here one time (for convenience).
 
 #+begin_src bash
-programchoices () {
+max() {
+    echo -e "$1\n$2" | sort -n | tail -1
+}
+
+getbiggestword() {
+    echo "$@" | sed "s/ /\n/g" | wc -L
+}
+
+replicate() {
+    local n="$1"
+    local x="$2"
+    local str
+
+    for _ in $(seq 1 "$n"); do
+        str="$str$x"
+    done
+    echo "$str"
+}
+
+programchoices() {
     choices=()
+    local maxlen; maxlen="$(getbiggestword "${!checkboxes[@]}")"
+    linesize="$(max "$maxlen" 42)"
+    local spacer; spacer="$(replicate "$((linesize - maxlen))" " ")"
+
     for key in "${!checkboxes[@]}"
     do
         # A portable way to check if a command exists in $PATH and is executable.
         # If it doesn't exist, we set the tick box to OFF.
         # If it exists, then we set the tick box to ON.
-        if ! [ -x "$(command -v ${checkboxes[$key]})" ]; then
+        if ! command -v "${checkboxes[$key]}" > /dev/null; then
             # $spacer length is defined in the individual window functions based
             # on the needed length to make the checkbox wide enough to fit window.
             choices+=("${key}" "${spacer}" "OFF")
@@ -313,10 +336,10 @@ selectedprograms() {
     result=$(
         # Creates the whiptail checklist. Also, we use a nifty
         # trick to swap stdout and stderr.
-        whiptail --title "$title" \
-                 --checklist "$text" 22 78 12 \
-                 "${choices[@]}" \
-                 3>&2 2>&1 1>&3-
+        whiptail --title "$title"                               \
+                 --checklist "$text" 22 "$((linesize + 16))" 12 \
+                 "${choices[@]}"                                \
+                 3>&2 2>&1 1>&3
     )
 }
 

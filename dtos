@@ -181,25 +181,26 @@ selectedprograms() {
 }
 
 exitorinstall() {
-    local exitstatus="$?"
+    exitstatus=$?
     # Check the exit status, if 0 we will install the selected
     # packages. A command which exits with zero (0) has succeeded.
     # A non-zero (1-255) exit status indicates failure.
-    if [ "$exitstatus" = 0 ]; then
+    if [ $exitstatus = 0 ]; then
         # Take the results and remove the "'s and add new lines.
         # Otherwise, pacman is not going to like how we feed it.
-        programs=$(echo "$result" | sed 's/" /\n/g' | sed 's/"//g')
-        echo "$programs"
-        paru --needed --ask 4 -Syu "$programs" || \
+        programs=$(echo $result | sed 's/" /\n/g' | sed 's/"//g' )
+        echo $programs
+        paru --needed --ask 4 -Sy "$programs" || \
         echo "Failed to install required packages."
     else
         echo "User selected Cancel."
     fi
 }
 
-browsers() {
-    local title="Web Browsers"
-    local text="Select one or more web browsers to install.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+browsers () {
+    title="Web Browsers"
+    text="Select one or more web browsers to install.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 38); do echo -n " "; done)
 
     local -A checkboxes
     checkboxes["brave-bin"]="brave"
@@ -217,9 +218,10 @@ browsers() {
     programchoices && selectedprograms && exitorinstall
 }
 
-otherinternet() {
-    local title="Other Internet Programs"
-    local text="Other Internet programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+otherinternet () {
+    title="Other Internet Programs"
+    text="Other Internet programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 47); do echo -n " "; done)
 
     local -A checkboxes
     checkboxes["deluge"]="deluge"
@@ -238,8 +240,9 @@ otherinternet() {
 }
 
 multimedia() {
-    local title="Multimedia Programs"
-    local text="Multimedia programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    title="Multimedia Programs"
+    text="Multimedia programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 53); do echo -n " "; done)
 
     local -A checkboxes
     checkboxes["blender"]="blender"
@@ -258,8 +261,9 @@ multimedia() {
 }
 
 office() {
-    local title="Office Programs"
-    local text="Office and productivity programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    title="Office Programs"
+    text="Office and productivity programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 46); do echo -n " "; done)
 
     local -A checkboxes
     checkboxes["abiword"]="abiword"
@@ -274,9 +278,10 @@ office() {
     programchoices && selectedprograms && exitorinstall
 }
 
-games() {
-    local title="Games"
-    local text="Gaming programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+games () {
+    title="Games"
+    text="Gaming programs available for installation.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them."
+    spacer=$(for i in $(seq 1 51); do echo -n " "; done)
 
     local -A checkboxes
     checkboxes["0ad"]="0ad"
