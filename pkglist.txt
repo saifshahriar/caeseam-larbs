@@ -42,6 +42,8 @@ lolcat
 lxappearance
 lxsession
 maim
+mpc
+mpd
 mpv
 multicolor-sddm-theme
 neovim
@@ -65,6 +67,7 @@ slock
 starship
 stack
 sxiv
+timidity++
 ttf-hack
 ttf-jetbrains-mono
 ttf-joypixels
@@ -73,6 +76,7 @@ ttf-ubuntu-font-family
 trayer
 vim
 volumeicon
+wildmidi
 xdg-user-dirs
 xdotool
 xf86-video-qxl
