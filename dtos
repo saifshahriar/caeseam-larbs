@@ -127,7 +127,7 @@ installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-x
 
 installawesome && sudo pacman -Sy awesome dtos-awesome || echo "Not installing Awesome"
 
-installqtile && sudo pacman -Sy qtile dtos-qtile || echo "Not installing Qtile"
+installqtile && sudo pacman -Sy qtile dtos-qtile python-psutil || echo "Not installing Qtile"
 
 programchoices () {
     choices=()
