@@ -54,7 +54,7 @@ otf-font-awesome
 otf-raleway
 pacman-contrib
 pandoc
-pcmanfm
+pcmanfm-gtk3
 picom
 qalculate-gtk
 qt5ct
