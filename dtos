@@ -106,7 +106,7 @@ receive_key || error "Error receiving PGP key $_pgpkey"
 sudo pacman --noconfirm --needed -Sy dtos-core-repo/paru-bin || error "Error installing dtos-core-repo/paru-bin."
 
 choosewm() { \
-    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awesome, and Qtile. If unsure, Xmonad is the recommended choice, or install all three options and try out each of them." 16 60
+    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awesome, Bspwm, Dwm and Qtile. If unsure, Xmonad is the recommended choice, or install all three options and try out each of them." 16 60
 }
 
 installxmonad() { \
@@ -117,17 +117,30 @@ installawesome() { \
     whiptail --title "Window Managers - Awesome" --yesno "Would you like to install Awesome?" 8 60
 }
 
+installbspwm() { \
+    whiptail --title "Window Managers - Bspwm" --yesno "Would you like to install Bspwm?" 8 60
+}
+
+installdwm() { \
+    whiptail --title "Window Managers - Dwm" --yesno "Would you like to install Dwm?" 8 60
+}
+
 installqtile() { \
     whiptail --title "Window Managers - Qtile" --yesno "Would you like to install Qtile?" 8 60
 }
 
 choosewm || error "User chose to exit"
 
-installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || echo "Not installing XMonad"
+installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || echo "User chose not to install XMonad"
 
-installawesome && sudo pacman -Sy awesome dtos-awesome || echo "Not installing Awesome"
+installawesome && sudo pacman -Sy awesome dtos-awesome || echo "User chose not to install Awesome"
 
-installqtile && sudo pacman -Sy qtile dtos-qtile python-psutil || echo "Not installing Qtile"
+installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd || echo "User chose not to install Bspwm."
+
+installdwm && sudo pacman -Sy dtos-dwm dtos-dwmblocks && \
+    cp /etc/dtos/.config/dwm/dwm.desktop /usr/share/xsessions/dwm.desktop || echo "User chose not to install Dwm"
+
+installqtile && sudo pacman -Sy qtile dtos-qtile python-psutil || echo "User chose not to install Qtile"
 
 max() {
     echo -e "$1\n$2" | sort -n | tail -1
