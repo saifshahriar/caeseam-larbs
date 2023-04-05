@@ -297,7 +297,7 @@ installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd || echo "User 
 installdwm && sudo pacman -Sy dtos-dwm dtos-dwmblocks && \
     cp /etc/dtos/.config/dwm/dwm.desktop /usr/share/xsessions/dwm.desktop || echo "User chose not to install Dwm"
 
-installqtile && sudo pacman -Sy qtile dtos-qtile python-psutil || echo "User chose not to install Qtile"
+installqtile && sudo paru --needed --ask 4 -Sy qtile qtile-extras dtos-qtile python-psutil || echo "User chose not to install Qtile"
 
 #+end_src
 * Choose your software
