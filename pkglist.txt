@@ -31,6 +31,7 @@ dtos-sxiv
 dtos-xresources
 dtos-xwallpaper
 dtos-zsh
+dunst
 elementary-icon-theme
 emacs
 exa
@@ -106,7 +107,7 @@ xorg-xsetroot
 xterm
 xwallpaper
 yad
-yt-dlp
+youtube-dl
 zathura
 zathura-pdf-poppler
 zsh
