@@ -320,7 +320,7 @@ office
 games
 
 # Let's install each package listed in the pkglist.txt file.
-sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install required packages."
+sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install a required package from pkglist.txt."
 
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
