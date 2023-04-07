@@ -5,7 +5,7 @@ alacritty
 alsa-utils
 arc-gtk-theme
 arc-icon-theme
-aura
+aura-bin
 base-devel
 bluez
 bluez-utils
@@ -57,6 +57,7 @@ otf-font-awesome
 otf-raleway
 pacman-contrib
 pandoc
+paru-bin
 pcmanfm-gtk3
 picom
 qalculate-gtk
@@ -73,13 +74,13 @@ starship
 stack
 sxiv
 timidity++
+translate-shell
+trayer
 ttf-hack
 ttf-jetbrains-mono
 ttf-joypixels
 ttf-ms-fonts
 ttf-ubuntu-font-family
-translate-shell
-trayer
 vim
 volumeicon
 wildmidi
