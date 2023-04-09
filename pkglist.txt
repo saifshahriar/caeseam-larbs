@@ -3,6 +3,7 @@ adobe-source-code-pro-fonts
 adobe-source-sans-fonts
 alacritty
 alsa-utils
+arandr
 arc-gtk-theme
 arc-icon-theme
 aura-bin
@@ -56,6 +57,7 @@ opendoas
 otf-font-awesome
 otf-raleway
 pacman-contrib
+pamac-all
 pandoc
 paru-bin
 pcmanfm-gtk3
