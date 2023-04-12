@@ -24,6 +24,7 @@ dtos-conky
 dtos-dmscripts
 dtos-doom
 dtos-fish
+dtos-hub
 dtos-local-bin
 dtos-opendoas
 dtos-qutebrowser
@@ -53,6 +54,7 @@ multicolor-sddm-theme
 neovim
 networkmanager
 network-manager-applet
+octopi
 opendoas
 otf-font-awesome
 otf-raleway
