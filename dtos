@@ -366,9 +366,9 @@ echo "## Installing Doom Emacs. This may take a few minutes. ##"
 echo "#########################################################"
 [ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
 [ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
-git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom --force install
-~/.emacs.d/bin/doom sync
+git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
+~/.config/emacs/bin/doom --force install
+~/.config/emacs/bin/doom sync
 
 [ ! -d /etc/pacman.d/hooks ] && sudo mkdir /etc/pacman.d/hooks
 sudo cp /etc/dtos/.config/xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/

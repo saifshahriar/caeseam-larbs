@@ -15,7 +15,7 @@ bat
 cups
 didyoumean
 dmenu-distrotube
-dmscripts
+dmscripts-git
 dtos-alacritty
 dtos-backgrounds
 dtos-bash
