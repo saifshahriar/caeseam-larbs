@@ -79,6 +79,7 @@ sxiv
 timidity++
 translate-shell
 trayer
+trizen
 ttf-hack
 ttf-jetbrains-mono
 ttf-joypixels
