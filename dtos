@@ -106,7 +106,7 @@ receive_key || error "Error receiving PGP key $_pgpkey"
 sudo pacman --noconfirm --needed -Sy dtos-core-repo/paru-bin || error "Error installing dtos-core-repo/paru-bin."
 
 choosewm() { \
-    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awesome, Bspwm, Dwm and Qtile. If unsure, Xmonad is the recommended choice, or install all three options and try out each of them." 16 60
+    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awesome, Bspwm, Dwm and Qtile. If unsure, Xmonad is the recommended choice, or install all five options and try out each of them." 16 60
 }
 
 installxmonad() { \
@@ -135,7 +135,7 @@ installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-x
 
 installawesome && sudo pacman -Sy awesome dtos-awesome || echo "User chose not to install Awesome"
 
-installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd || echo "User chose not to install Bspwm."
+installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd polybar dtos-polybar || echo "User chose not to install Bspwm."
 
 installdwm && sudo pacman -Sy dtos-dwm dtos-dwmblocks && \
     cp /etc/dtos/.config/dwm/dwm.desktop /usr/share/xsessions/dwm.desktop || echo "User chose not to install Dwm"
