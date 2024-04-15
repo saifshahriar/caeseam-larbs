@@ -23,7 +23,8 @@
 - [[#warning-the-user-about-potential-problems][Warning the user about potential problems]]
 - [[#asking-user-to-confirm-choice-to-install-dtos][Asking user to confirm choice to install DTOS.]]
 - [[#checking-localeconf][Checking locale.conf]]
-- [[#adding-dtos-repo-to-pacmanconf][Adding DTOS repo to pacman.conf.]]
+- [[#installing-chaotic-aur][Installing Chaotic AUR]]
+- [[#adding-dtos-repo-to-pacmanconf][Adding DTOS repo to pacman.conf]]
 - [[#installing-paru][Installing paru]]
 - [[#installing-window-managers][Installing window manager(s)]]
 - [[#choose-your-software][Choose your software]]
@@ -32,7 +33,6 @@
 - [[#install-the-base-packages-from-repositories][Install the base packages from repositories]]
 - [[#copy-configs-over-from-etcdtos-into-home][Copy configs over from /etc/dtos into $HOME]]
 - [[#choosing-a-bar-for-xmonad][Choosing a Bar for XMonad]]
-- [[#install-doom-emacs][Install Doom Emacs]]
 - [[#copy-pacman-hooks][Copy pacman hooks]]
 - [[#copy-dmscripts-config-and-set-important-variables][Copy dmscripts config and set important variables]]
 - [[#compiling-xmonad][Compiling xmonad]]
@@ -208,7 +208,23 @@ grep "LC_CTYPE" /etc/locale.conf && echo "Checking the LC_CYPE variable in /etc/
 sudo locale-gen
 #+end_src
 
-* Adding DTOS repo to pacman.conf.
+* Installing Chaotic AUR
+#+begin_src bash
+chaoticaur() {\
+    echo "############################"
+    echo "## Installing Chaotic AUR ##"
+    echo "############################"
+    
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com && echo "Receiving key for chaotic AUR."
+    sudo pacman-key --lsign-key 3056513887B78AEB && echo "Signing key for chaotic AUR."
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' && echo "Installing chaotic AUR keyring."
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' && echo "Installing chaotic AUR mirrorlist."
+}
+
+chaoticaur || error "Error installing Chaotic AUR."
+#+end_src
+
+* Adding DTOS repo to pacman.conf
 #+begin_src bash
 addrepo() { \
     echo "#########################################################"
@@ -223,10 +239,10 @@ addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
 #+end_src
 
 * Installing paru
-Let's go ahead and install the paru AUR helper because some of the software that the user could choose to install is only found the AUR.
+Let's go ahead and install the paru AUR helper because some of the software that the user could choose to install is only found in the AUR.
 
 #+begin_src bash
-sudo pacman --noconfirm --needed -Sy dtos-core-repo/paru-bin || error "Error installing dtos-core-repo/paru-bin."
+sudo pacman --noconfirm --needed -Sy chaotic-aur/paru || error "Error installing dtos-core-repo/paru-bin."
 
 #+end_src
 
@@ -479,6 +495,8 @@ While it would be easier to make packages that could install DTOS configs direct
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
 echo "################################################################"
+[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
+[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
 [ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
 [ -d /etc/dtos ] && mkdir ~/dtos-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/dtos ~/dtos-backup-$(date +%Y.%m.%d-%H%M)
 [ ! -d ~/.config ] && mkdir ~/.config
@@ -520,18 +538,6 @@ if [ -d "/etc/dtos/.config/xmonad/" ]; then
     done
 fi
 
-#+end_src
-
-* Install Doom Emacs
-#+begin_src bash
-echo "#########################################################"
-echo "## Installing Doom Emacs. This may take a few minutes. ##"
-echo "#########################################################"
-[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
-[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
-git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
-~/.config/emacs/bin/doom --force install
-~/.config/emacs/bin/doom sync
 #+end_src
 
 * Copy pacman hooks

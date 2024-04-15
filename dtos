@@ -71,6 +71,19 @@ lastchance || error "User choose to exit."
 grep "LC_CTYPE" /etc/locale.conf && echo "Checking the LC_CYPE variable in /etc/locale.conf. Variable is already set." || grep "LANG=" /etc/locale.conf | sed 's/LANG=/LC_CTYPE=/g' | sudo tee -a /etc/locale.conf
 sudo locale-gen
 
+chaoticaur() {\
+    echo "############################"
+    echo "## Installing Chaotic AUR ##"
+    echo "############################"
+    
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com && echo "Receiving key for chaotic AUR."
+    sudo pacman-key --lsign-key 3056513887B78AEB && echo "Signing key for chaotic AUR."
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' && echo "Installing chaotic AUR keyring."
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' && echo "Installing chaotic AUR mirrorlist."
+}
+
+chaoticaur || error "Error installing Chaotic AUR."
+
 addrepo() { \
     echo "#########################################################"
     echo "## Adding the DTOS core repository to /etc/pacman.conf ##"
@@ -82,7 +95,7 @@ addrepo() { \
 
 addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
 
-sudo pacman --noconfirm --needed -Sy dtos-core-repo/paru-bin || error "Error installing dtos-core-repo/paru-bin."
+sudo pacman --noconfirm --needed -Sy chaotic-aur/paru || error "Error installing dtos-core-repo/paru-bin."
 
 choosewm() { \
     whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awesome, Bspwm, Dwm and Qtile. If unsure, Xmonad is the recommended choice, or install all five options and try out each of them." 16 60
@@ -304,6 +317,8 @@ sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install a r
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
 echo "################################################################"
+[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
+[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
 [ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
 [ -d /etc/dtos ] && mkdir ~/dtos-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/dtos ~/dtos-backup-$(date +%Y.%m.%d-%H%M)
 [ ! -d ~/.config ] && mkdir ~/.config
@@ -339,15 +354,6 @@ if [ -d "/etc/dtos/.config/xmonad/" ]; then
         esac
     done
 fi
-
-echo "#########################################################"
-echo "## Installing Doom Emacs. This may take a few minutes. ##"
-echo "#########################################################"
-[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
-[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
-git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
-~/.config/emacs/bin/doom --force install
-~/.config/emacs/bin/doom sync
 
 [ ! -d /etc/pacman.d/hooks ] && sudo mkdir /etc/pacman.d/hooks
 sudo cp /etc/dtos/.config/xmonad/pacman-hooks/recompile-xmonad.hook /etc/pacman.d/hooks/
