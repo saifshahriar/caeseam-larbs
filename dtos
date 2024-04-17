@@ -132,7 +132,7 @@ installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd polybar dtos-p
 installdwm && sudo pacman -Sy dtos-dwm dtos-dwmblocks && \
     cp /etc/dtos/.config/dwm/dwm.desktop /usr/share/xsessions/dwm.desktop || echo "User chose not to install Dwm"
 
-installqtile && paru --needed --ask 4 -Sy qtile qtile-extras dtos-qtile python-psutil || echo "User chose not to install Qtile"
+installqtile && sudo pacman --needed --ask 4 -Sy qtile qtile-extras dtos-qtile python-psutil || echo "User chose not to install Qtile"
 
 max() {
     echo -e "$1\n$2" | sort -n | tail -1
