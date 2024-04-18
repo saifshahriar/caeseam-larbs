@@ -25,7 +25,6 @@
 - [[#checking-localeconf][Checking locale.conf]]
 - [[#installing-chaotic-aur][Installing Chaotic AUR]]
 - [[#adding-chaotic-aur-repo-and-dtos-repo-to-pacmanconf][Adding Chaotic AUR repo and DTOS repo to pacman.conf]]
-- [[#installing-paru][Installing paru]]
 - [[#installing-window-managers][Installing window manager(s)]]
 - [[#choose-your-software][Choose your software]]
   - [[#three-functions-we-use-later][Three functions we use later]]
@@ -245,14 +244,6 @@ addrepo() { \
 addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
 #+end_src
 
-* Installing paru
-Let's go ahead and install the paru AUR helper because some of the software that the user could choose to install is only found in the AUR.
-
-#+begin_src bash
-sudo pacman --noconfirm --needed -Sy chaotic-aur/paru || error "Error installing dtos-core-repo/paru-bin."
-
-#+end_src
-
 * Installing window manager(s)
 
 #+begin_src bash
@@ -360,7 +351,7 @@ exitorinstall() {
         # Otherwise, pacman is not going to like how we feed it.
         programs=$(echo $result | sed 's/" /\n/g' | sed 's/"//g' )
         echo $programs
-        paru --needed --ask 4 -Sy "$programs" || \
+        sudo pacman --needed --ask 4 -Sy "$programs" || \
         echo "Failed to install required packages."
     else
         echo "User selected Cancel."
@@ -383,12 +374,12 @@ browsers () {
     checkboxes["chromium"]="chromium"
     checkboxes["firefox"]="firefox"
     checkboxes["google-chrome"]="google-chrome-stable"
-    checkboxes["icecat-bin"]="icecat"
-    checkboxes["librewolf-bin"]="librewolf"
+    checkboxes["icecat"]="icecat"
+    checkboxes["librewolf"]="librewolf"
     checkboxes["microsoft-edge-stable-bin"]="microsoft-edge-stable"
-    checkboxes["opera"]="opera"
+    checkboxes["mullvad-browser-bin"]="mullvad-browser"
     checkboxes["qutebrowser"]="qutebrowser"
-    checkboxes["ungoogled-chromium-bin"]="ungoogled-chromium"
+    checkboxes["ungoogled-chromium"]="ungoogled-chromium"
     checkboxes["vivaldi"]="vivaldi"
 
     programchoices && selectedprograms && exitorinstall
@@ -406,8 +397,8 @@ otherinternet () {
     checkboxes["filezilla"]="filezilla"
     checkboxes["geary"]="geary"
     checkboxes["hexchat"]="hexchat"
-    checkboxes["jitsi-meet-bin"]="jitsi-meet-desktop"
-    checkboxes["mailspring"""]="mailspring"
+    checkboxes["jitsi-meet-desktop"]="jitsi-meet-desktop"
+    checkboxes["mailspring"]="mailspring"
     checkboxes["telegram-desktop"]="telegram"
     checkboxes["thunderbird"]="thunderbird"
     checkboxes["transmission-gtk"]="transmission-gtk"
@@ -469,7 +460,7 @@ games () {
     checkboxes["supertuxkart"]="supertuxkart"
     checkboxes["sauerbraten"]="sauerbraten-client"
     checkboxes["teeworlds"]="teeworlds"
-    checkboxes["veloren-bin"]="veloren"
+    checkboxes["veloren-git"]="veloren"
     checkboxes["wesnoth"]="wesnoth"
     checkboxes["xonotic"]="xonotic-glx"
 
