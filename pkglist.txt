@@ -23,7 +23,6 @@ dtos-bash
 dtos-cache
 dtos-conky
 dtos-dmscripts
-dtos-doom
 dtos-fish
 dtos-local-bin
 dtos-qutebrowser
@@ -59,7 +58,6 @@ otf-font-awesome
 otf-raleway
 pacman-contrib
 pandoc
-paru
 pcmanfm-gtk3
 picom
 qalculate-gtk
