@@ -98,11 +98,11 @@ addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
 sudo pacman --noconfirm --needed -Sy chaotic-aur/paru || error "Error installing dtos-core-repo/paru-bin."
 
 choosewm() { \
-    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awesome, Bspwm, Dwm and Qtile. If unsure, Xmonad is the recommended choice, or install all five options and try out each of them." 16 60
+    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Qtile, Awesome, Bspwm, Dwm and Xmonad. If unsure, Qtile is the recommended choice, or install all five options and try out each of them." 16 60
 }
 
-installxmonad() { \
-    whiptail --title "Window Managers - Xmonad" --yesno "Would you like to install Xmonad?" 8 60
+installqtile() { \
+    whiptail --title "Window Managers - Qtile" --yesno "Would you like to install Qtile?" 8 60
 }
 
 installawesome() { \
@@ -117,13 +117,13 @@ installdwm() { \
     whiptail --title "Window Managers - Dwm" --yesno "Would you like to install Dwm?" 8 60
 }
 
-installqtile() { \
-    whiptail --title "Window Managers - Qtile" --yesno "Would you like to install Qtile?" 8 60
+installxmonad() { \
+    whiptail --title "Window Managers - Xmonad" --yesno "Would you like to install Xmonad?" 8 60
 }
 
 choosewm || error "User chose to exit"
 
-installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || echo "User chose not to install XMonad"
+installqtile && sudo pacman --needed --ask 4 -Sy qtile qtile-extras dtos-qtile python-psutil || echo "User chose not to install Qtile"
 
 installawesome && sudo pacman -Sy awesome dtos-awesome || echo "User chose not to install Awesome"
 
@@ -132,7 +132,7 @@ installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd polybar dtos-p
 installdwm && sudo pacman -Sy dtos-dwm dtos-dwmblocks && \
     cp /etc/dtos/.config/dwm/dwm.desktop /usr/share/xsessions/dwm.desktop || echo "User chose not to install Dwm"
 
-installqtile && sudo pacman --needed --ask 4 -Sy qtile qtile-extras dtos-qtile python-psutil || echo "User chose not to install Qtile"
+installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || echo "User chose not to install XMonad"
 
 max() {
     echo -e "$1\n$2" | sort -n | tail -1
@@ -317,12 +317,20 @@ sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install a r
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
 echo "################################################################"
+# If these directories or files exist, the DTOS installation will make a backup of them.
 [ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
 [ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
+[ -f ~/.bashrc ] && mv ~/.bashrc ~/.bashrc.bak.$(date +"%Y%m%d_%H%M%S")
+[ -f ~/.zshrc ] && mv ~/.zshrc ~/.zshrc.bak.$(date +"%Y%m%d_%H%M%S")
+
+# Make the /etc/dtos directory if it doesn't exist. 
 [ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
-[ -d /etc/dtos ] && mkdir ~/dtos-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/dtos ~/dtos-backup-$(date +%Y.%m.%d-%H%M)
+
+# Make the ~/.config directory if it doesn't exist, or backup the ~/.config directory if it does exist. 
 [ ! -d ~/.config ] && mkdir ~/.config
 [ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
+
+# Copy all DTOS configs found in /etc/dtos over to the USER's home directory.
 cd /etc/dtos && cp -Rf . ~ && cd -
 
 # Change all scripts in .local/bin to be executable.

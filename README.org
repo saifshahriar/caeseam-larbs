@@ -46,7 +46,7 @@
 #+ATTR_HTML: :alt DTOS scrot :title DTOS Scrot :align left
 [[https://gitlab.com/dwt1/dotfiles/-/raw/master/.screenshots/dtos-thumb-01.png]]
 
-DTOS is the name that I have chosen for my post-installation script that will deploy my Xmonad config, my Emacs config, as well as associated programs that are needed to create a proper "desktop" experience.  DTOS should work on Arch Linux or any Arch-based distribution.  The programs that will be installed include Xmonad, Xmobar, Doom Emacs, Fish and other programs needed to recreate DT's XMonad desktop.  DTOS is only for x86_64 architecture and will not work on ARM devices such as the Raspberry Pi.
+DTOS is the name that I have chosen for my post-installation script that will deploy my Qtile config, my Emacs config, as well as associated programs that are needed to create a proper "desktop" experience.  DTOS should work on Arch Linux or any Arch-based distribution.  The programs that will be installed include qtile, dmscripts, emacs, fish and many other programs needed to recreate DT's Qtile desktop.  DTOS is only for x86_64 architecture and will not work on ARM devices such as the Raspberry Pi.
 
 * Installing DTOS
 ** Installation instructions
@@ -72,8 +72,8 @@ ParallelDownloads = 5
 
 The solution is, before running the script, edit the pkglist.txt file and remove the packages above.
 
-*** Doom Emacs doesn't launch.
-After the installation is completed, Doom Emacs may not launch correctly the very first time.  Killing the Emacs server (if running) and restarting it fixes this.
+*** Emacs doesn't launch.
+After the installation is completed, Emacs may not launch correctly the very first time.  Killing the Emacs server (if running) and restarting it fixes this.
 #+begin_example
 killall emacs
 /usr/bin/emacs --daemon &
@@ -250,11 +250,11 @@ sudo pacman --noconfirm --needed -Sy chaotic-aur/paru || error "Error installing
 
 #+begin_src bash
 choosewm() { \
-    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Xmonad, Awesome, Bspwm, Dwm and Qtile. If unsure, Xmonad is the recommended choice, or install all five options and try out each of them." 16 60
+    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Qtile, Awesome, Bspwm, Dwm and Xmonad. If unsure, Qtile is the recommended choice, or install all five options and try out each of them." 16 60
 }
 
-installxmonad() { \
-    whiptail --title "Window Managers - Xmonad" --yesno "Would you like to install Xmonad?" 8 60
+installqtile() { \
+    whiptail --title "Window Managers - Qtile" --yesno "Would you like to install Qtile?" 8 60
 }
 
 installawesome() { \
@@ -269,13 +269,13 @@ installdwm() { \
     whiptail --title "Window Managers - Dwm" --yesno "Would you like to install Dwm?" 8 60
 }
 
-installqtile() { \
-    whiptail --title "Window Managers - Qtile" --yesno "Would you like to install Qtile?" 8 60
+installxmonad() { \
+    whiptail --title "Window Managers - Xmonad" --yesno "Would you like to install Xmonad?" 8 60
 }
 
 choosewm || error "User chose to exit"
 
-installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || echo "User chose not to install XMonad"
+installqtile && sudo pacman --needed --ask 4 -Sy qtile qtile-extras dtos-qtile python-psutil || echo "User chose not to install Qtile"
 
 installawesome && sudo pacman -Sy awesome dtos-awesome || echo "User chose not to install Awesome"
 
@@ -284,7 +284,7 @@ installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd polybar dtos-p
 installdwm && sudo pacman -Sy dtos-dwm dtos-dwmblocks && \
     cp /etc/dtos/.config/dwm/dwm.desktop /usr/share/xsessions/dwm.desktop || echo "User chose not to install Dwm"
 
-installqtile && sudo pacman --needed --ask 4 -Sy qtile qtile-extras dtos-qtile python-psutil || echo "User chose not to install Qtile"
+installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || echo "User chose not to install XMonad"
 
 #+end_src
 * Choose your software
@@ -478,7 +478,7 @@ games
 #+end_src
 
 * Install the base packages from repositories
-All packages listed are either in the standard Arch repos or in the DTOS repos.  All of these will be installed using pacman.  The only program that will not be installed through pacman is Doom Emacs, which will be installed later in the script.
+All packages listed are either in the standard Arch repos, the Chaotic AUR or in the DTOS repos.  All of these can be installed using pacman.  Two AUR helpers (aura and paru) are also installed and are needed if installing packages from the standard AUR.
 
 =NOTE:= The '--ask 4' option is an undocumented option for pacman that can be found in pacman's source code (in pacman's alpm.h).  Adding this flags means that all questions about removing packages that are conflicts will automatically be answered YES.
 
@@ -495,18 +495,28 @@ While it would be easier to make packages that could install DTOS configs direct
 echo "################################################################"
 echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
 echo "################################################################"
+# If these directories or files exist, the DTOS installation will make a backup of them.
 [ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
 [ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
+[ -f ~/.bashrc ] && mv ~/.bashrc ~/.bashrc.bak.$(date +"%Y%m%d_%H%M%S")
+[ -f ~/.zshrc ] && mv ~/.zshrc ~/.zshrc.bak.$(date +"%Y%m%d_%H%M%S")
+
+# Make the /etc/dtos directory if it doesn't exist. 
 [ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
-[ -d /etc/dtos ] && mkdir ~/dtos-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf /etc/dtos ~/dtos-backup-$(date +%Y.%m.%d-%H%M)
+
+# Make the ~/.config directory if it doesn't exist, or backup the ~/.config directory if it does exist. 
 [ ! -d ~/.config ] && mkdir ~/.config
 [ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
+
+# Copy all DTOS configs found in /etc/dtos over to the USER's home directory.
 cd /etc/dtos && cp -Rf . ~ && cd -
+
 #+end_src
 
 #+begin_src bash
 # Change all scripts in .local/bin to be executable.
 find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
+
 #+end_src
 
 * Choosing a Bar for XMonad
