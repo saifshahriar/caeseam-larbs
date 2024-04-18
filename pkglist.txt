@@ -26,7 +26,6 @@ dtos-dmscripts
 dtos-doom
 dtos-fish
 dtos-local-bin
-dtos-opendoas
 dtos-qutebrowser
 dtos-sounds
 dtos-sxiv
