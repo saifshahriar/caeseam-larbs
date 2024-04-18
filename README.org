@@ -24,7 +24,7 @@
 - [[#asking-user-to-confirm-choice-to-install-dtos][Asking user to confirm choice to install DTOS.]]
 - [[#checking-localeconf][Checking locale.conf]]
 - [[#installing-chaotic-aur][Installing Chaotic AUR]]
-- [[#adding-dtos-repo-to-pacmanconf][Adding DTOS repo to pacman.conf]]
+- [[#adding-chaotic-aur-repo-and-dtos-repo-to-pacmanconf][Adding Chaotic AUR repo and DTOS repo to pacman.conf]]
 - [[#installing-paru][Installing paru]]
 - [[#installing-window-managers][Installing window manager(s)]]
 - [[#choose-your-software][Choose your software]]
@@ -217,16 +217,23 @@ chaoticaur() {\
     
     sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com && echo "Receiving key for chaotic AUR."
     sudo pacman-key --lsign-key 3056513887B78AEB && echo "Signing key for chaotic AUR."
-    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' && echo "Installing chaotic AUR keyring."
-    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' && echo "Installing chaotic AUR mirrorlist."
+    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' && echo "Installing chaotic AUR keyring."
+    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' && echo "Installing chaotic AUR mirrorlist."
 }
 
 chaoticaur || error "Error installing Chaotic AUR."
 #+end_src
 
-* Adding DTOS repo to pacman.conf
+* Adding Chaotic AUR repo and DTOS repo to pacman.conf
 #+begin_src bash
 addrepo() { \
+    echo "###########################################################"
+    echo "## Adding the Chaotic AUR repository to /etc/pacman.conf ##"
+    echo "###########################################################"
+    grep -qxF "[chaotic-aur]" /etc/pacman.conf ||
+        ( echo " "; echo "[chaotic-aur]"; \
+        echo "Include = /etc/pacman.d/chaotic-mirrorlist") | sudo tee -a /etc/pacman.conf
+
     echo "#########################################################"
     echo "## Adding the DTOS core repository to /etc/pacman.conf ##"
     echo "#########################################################"
