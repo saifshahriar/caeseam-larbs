@@ -26,6 +26,7 @@ dtos-dmscripts
 dtos-fish
 dtos-local-bin
 dtos-qutebrowser
+dtos-rofi
 dtos-sounds
 dtos-sxiv
 dtos-xresources
