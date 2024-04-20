@@ -10,6 +10,10 @@
 # WARNING: Run this script at your own risk.
 # DEPENDENCIES: libnewt (probably already on the system)
 
+bold=$(tput setaf 2 bold)
+bolderror=$(tput setaf 2 bold)
+normal=$(tput sgr0)
+
 if [ "$(id -u)" = 0 ]; then
     echo "##################################################################"
     echo "This script MUST NOT be run as root user since it makes changes"
@@ -22,7 +26,7 @@ if [ "$(id -u)" = 0 ]; then
 fi
 
 error() { \
-    clear; printf "ERROR:\\n%s\\n" "$1" >&2; exit 1;
+    clear; printf "${bolderror}ERROR:${normal}\\n%s\\n" "$1" >&2; exit 1;
 }
 
 export NEWT_COLORS="
@@ -54,7 +58,7 @@ speedwarning() { \
 }
 
 distrowarning() { \
-    whiptail --title "Installing DTOS!" --msgbox "WARNING! While this script works on all Arch based distros, some distros choose to package certain things that we also package, which may result in errors when trying to install DTOS packages. If this happens, please look at the package list and remove conflicts manually." 16 60 || error "User choose to exit."
+    whiptail --title "Installing DTOS!" --msgbox "WARNING! While this script works on all Arch-based distros, some distros choose to package certain things that we also package, which may result in errors when trying to install DTOS packages. If this happens, please look at the package list and remove conflicts manually." 16 60 || error "User choose to exit."
 }
 
 grep -qs "#ParallelDownloads" /etc/pacman.conf && speedwarning
@@ -72,29 +76,32 @@ grep "LC_CTYPE" /etc/locale.conf && echo "Checking the LC_CYPE variable in /etc/
 sudo locale-gen
 
 chaoticaur() {\
-    echo "############################"
-    echo "## Installing Chaotic AUR ##"
-    echo "############################"
+    printf "%s\n" "## Installing Chaotic AUR ##"
+
+    printf "%s" "Adding repo " && printf "%s" "${bold}[chaotic-aur] " && printf "%s\n" "${normal}to /etc/pacman.conf."
     
-    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com && echo "Receiving key for chaotic AUR."
-    sudo pacman-key --lsign-key 3056513887B78AEB && echo "Signing key for chaotic AUR."
-    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' && echo "Installing chaotic AUR keyring."
-    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' && echo "Installing chaotic AUR mirrorlist."
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com && echo "Receiving key for ${bold}chaotic-aur{normal}."
+
+    sudo pacman-key --lsign-key 3056513887B78AEB && echo "Signing key for ${bold}[chaotic-aur]${normal}."
+
+    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' && echo "Installing keyring for ${bold}[chaotic-aur]${normal}."
+
+    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' && echo "Installing mirrorlist for ${bold}chaotic-aur${normal}."
 }
 
 chaoticaur || error "Error installing Chaotic AUR."
 
 addrepo() { \
-    echo "###########################################################"
-    echo "## Adding the Chaotic AUR repository to /etc/pacman.conf ##"
-    echo "###########################################################"
+    printf "%s\n" "## Adding repositories to /etc/pacman.conf."
+    
+    # Adding chaotic-aur to pacman.conf
+    printf "%s" "Adding repo " && printf "%s" "${bold}[chaotic-aur] " && printf "%s\n" "${normal}to /etc/pacman.conf."
     grep -qxF "[chaotic-aur]" /etc/pacman.conf ||
         ( echo " "; echo "[chaotic-aur]"; \
         echo "Include = /etc/pacman.d/chaotic-mirrorlist") | sudo tee -a /etc/pacman.conf
 
-    echo "#########################################################"
-    echo "## Adding the DTOS core repository to /etc/pacman.conf ##"
-    echo "#########################################################"
+    # Adding dtos-core-repo to pacman.conf
+    printf "%s" "Adding repo " && printf "%s" "${bold}[dtos-core-repo] " && printf "%s\n" "${normal}to /etc/pacman.conf."
     grep -qxF "[dtos-core-repo]" /etc/pacman.conf ||
         ( echo " "; echo "[dtos-core-repo]"; echo "SigLevel = Optional DatabaseOptional"; \
         echo "Server = https://gitlab.com/dtos/\$repo/-/raw/main/\$arch") | sudo tee -a /etc/pacman.conf
@@ -319,9 +326,8 @@ games
 # Let's install each package listed in the pkglist.txt file.
 sudo pacman --needed --ask 4 -Sy - < pkglist.txt || error "Failed to install a required package from pkglist.txt."
 
-echo "################################################################"
-echo "## Copying DTOS configuration files from /etc/dtos into \$HOME ##"
-echo "################################################################"
+printf  "%s\n" "## Copying DTOS configuration files from /etc/dtos into \$HOME"
+
 # If these directories or files exist, the DTOS installation will make a backup of them.
 [ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
 [ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
@@ -379,18 +385,14 @@ sed -i 's/DMTERM=\"st -e\"/DMTERM=\"alacritty -e\"/g' $HOME/.config/dmscripts/co
 sed -i 's/setbg_dir=\"${HOME}\/Pictures\/Wallpapers\"/setbg_dir=\"\/usr\/share\/backgrounds\/dtos-backgrounds\"/g' $HOME/.config/dmscripts/config
 
 xmonad_recompile() { \
-    echo "########################"
-    echo "## Recompiling XMonad ##"
-    echo "########################"
+    printf  "%s\n" "## Recompiling XMonad"
     xmonad --recompile
 }
 
 xmonad_recompile || echo "Recompiling Xmonad failed!"
 
 xmonadctl_compile() { \
-    echo "####################################"
-    echo "## Compiling the xmonadctl script ##"
-    echo "####################################"
+    printf  "%s\n" "## Compiling the xmonadctl script "
     ghc -dynamic "$HOME"/.config/xmonad/xmonadctl.hs
 }
 
@@ -420,9 +422,7 @@ done
 sudo systemctl disable $(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}') || echo "Cannot disable current display manager."
 # Enable sddm as login manager
 sudo systemctl enable sddm
-echo "###################################"
-echo "## Enable sddm as login manager. ##"
-echo "###################################"
+printf "%s\n" "Enabling and configuring ${bold}SDDM ${normal}as the login manager."
 
 ## Make multicolor-sddm-theme the default sddm theme ##
 # This is the sddm system configuration file.
@@ -445,16 +445,14 @@ echo "###################################"
     sudo cp /etc/sddm.conf.d/kde_settings.conf /etc/sddm.conf.d/kde_settings.backup && \
     sudo sed -i 's/^Current=*.*/Current=multicolor-sddm-theme/g' /etc/sddm.conf.d/kde_settings.conf
 
-echo "##############################"
-echo "## DTOS has been installed! ##"
-echo "##############################"
+printf "%s\n" "${bold}DTOS had been installed!${normal}"
 
 while true; do
-    read -p "Do you want to reboot to get your dtos? [Y/n] " yn
+    read -p "Do you want to reboot to get your DTOS? [Y/n] " yn
     case $yn in
         [Yy]* ) reboot;;
         [Nn]* ) break;;
         "" ) reboot;;
-        * ) echo "Please answer yes or no.";;
+        * ) echo "Please answer YES or NO.";;
     esac
 done
