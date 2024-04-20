@@ -269,7 +269,7 @@ addrepo || error "Error adding DTOS repo to /etc/pacman.conf."
 
 #+begin_src bash
 choosewm() { \
-    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Qtile, Awesome, Bspwm, Dwm and Xmonad. If unsure, Qtile is the recommended choice, or install all five options and try out each of them." 16 60
+    whiptail --title "CHOOSE YOUR WINDOW MANAGER(S)" --msgbox "Choose at least one window manager to install. The choices are: Qtile, Awesome, Bspwm and Xmonad. If unsure, Qtile is the recommended choice, or install all five options and try out each of them." 16 60
 }
 
 installqtile() { \
@@ -282,10 +282,6 @@ installawesome() { \
 
 installbspwm() { \
     whiptail --title "Window Managers - Bspwm" --yesno "Would you like to install Bspwm?" 8 60
-}
-
-installdwm() { \
-    whiptail --title "Window Managers - Dwm" --yesno "Would you like to install Dwm?" 8 60
 }
 
 installxmonad() { \
@@ -302,10 +298,6 @@ installawesome && sudo pacman -Sy awesome dtos-awesome || \
 
 installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd polybar dtos-polybar || \
     echo "User chose not to install Bspwm."
-
-installdwm && sudo pacman -Sy dtos-dwm dtos-dwmblocks && \
-    cp /etc/dtos/.config/dwm/dwm.desktop /usr/share/xsessions/dwm.desktop || \
-    echo "User chose not to install Dwm."
 
 installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || \
     echo "User chose not to install XMonad"

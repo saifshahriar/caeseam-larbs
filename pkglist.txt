@@ -17,6 +17,7 @@ cups
 didyoumean
 dmenu-distrotube
 dmscripts-git
+dtmacs
 dtos-alacritty
 dtos-backgrounds
 dtos-bash
