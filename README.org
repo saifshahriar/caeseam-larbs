@@ -16,6 +16,7 @@
   - [[#test-your-changes-before-pushing][Test your changes before pushing]]
 - [[#shebang-plus-comments][Shebang plus comments]]
 - [[#check-that-user-is-not-root][Check that user is NOT root!]]
+- [[#font-effects][Font Effects]]
 - [[#a-function-for-errors][A function for errors]]
 - [[#whiptail-exports][Whiptail Exports]]
 - [[#sync-the-repos-and-install-whiptail][Sync the repos and install 'whiptail']]
@@ -107,7 +108,7 @@ It would be a good idea to keep a clean installation of an Arch-based distro in 
 # |____/ |_| \___/|____/
 #
 # NAME: DTOS
-# DESC: An installation and deployment script for DT's Xmonad desktop.
+# DESC: An installation and deployment script for DT's Qtile desktop.
 # WARNING: Run this script at your own risk.
 # DEPENDENCIES: libnewt (probably already on the system)
 
@@ -116,10 +117,6 @@ It would be a good idea to keep a clean installation of an Arch-based distro in 
 Don't run this script as root!  This is done for safety reasons.  This script makes a lot of changes to the $HOME of the $USER of this script.  For obvious reasons, we want $USER to not be 'root' and $HOME not to be '/root'.  Instead, run this script as a normal user.  You will be asked to enter a sudo password at several points during the installation.
 
 #+begin_src bash
-bold=$(tput setaf 2 bold)
-bolderror=$(tput setaf 2 bold)
-normal=$(tput sgr0)
-
 if [ "$(id -u)" = 0 ]; then
     echo "##################################################################"
     echo "This script MUST NOT be run as root user since it makes changes"
@@ -130,6 +127,16 @@ if [ "$(id -u)" = 0 ]; then
     echo "##################################################################"
     exit 1
 fi
+
+#+end_src
+
+* Font Effects
+Use these variables within 'echo' or 'printf' to bold text or to make text normal again.
+
+#+begin_src bash
+bold=$(tput setaf 2 bold)      # makes text bold and sets color to 2
+bolderror=$(tput setaf 3 bold) # makes text bold and sets color to 3
+normal=$(tput sgr0)            # resets text settings back to normal
 
 #+end_src
 
@@ -166,9 +173,7 @@ button=black,red"
 
 * Sync the repos and install 'whiptail'
 #+begin_src bash
-echo "##################################################################"
-echo "## Syncing the repos and installing 'whiptail' if not installed ##"
-echo "##################################################################"
+printf "%s\n" "## Syncing the repos and installing ${bold}whiptail ${normal}if not installed."
 sudo pacman --noconfirm --needed -Syu libnewt || error "Error syncing the repos."
 
 #+end_src

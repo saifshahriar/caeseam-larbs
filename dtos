@@ -6,13 +6,9 @@
 # |____/ |_| \___/|____/
 #
 # NAME: DTOS
-# DESC: An installation and deployment script for DT's Xmonad desktop.
+# DESC: An installation and deployment script for DT's Qtile desktop.
 # WARNING: Run this script at your own risk.
 # DEPENDENCIES: libnewt (probably already on the system)
-
-bold=$(tput setaf 2 bold)
-bolderror=$(tput setaf 2 bold)
-normal=$(tput sgr0)
 
 if [ "$(id -u)" = 0 ]; then
     echo "##################################################################"
@@ -24,6 +20,10 @@ if [ "$(id -u)" = 0 ]; then
     echo "##################################################################"
     exit 1
 fi
+
+bold=$(tput setaf 2 bold)      # makes text bold and sets color to 2
+bolderror=$(tput setaf 3 bold) # makes text bold and sets color to 3
+normal=$(tput sgr0)            # resets text settings back to normal
 
 error() { \
     clear; printf "${bolderror}ERROR:${normal}\\n%s\\n" "$1" >&2; exit 1;
@@ -42,9 +42,7 @@ checkbox=black,blue
 compactbutton=black,blue
 button=black,red"
 
-echo "##################################################################"
-echo "## Syncing the repos and installing 'whiptail' if not installed ##"
-echo "##################################################################"
+printf "%s\n" "## Syncing the repos and installing ${bold}whiptail ${normal}if not installed."
 sudo pacman --noconfirm --needed -Syu libnewt || error "Error syncing the repos."
 
 welcome() { \
