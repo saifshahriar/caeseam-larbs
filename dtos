@@ -70,21 +70,21 @@ lastchance() { \
 
 lastchance || error "User choose to exit."
 
-grep "LC_CTYPE" /etc/locale.conf && echo "Checking the LC_CYPE variable in /etc/locale.conf. Variable is already set." || grep "LANG=" /etc/locale.conf | sed 's/LANG=/LC_CTYPE=/g' | sudo tee -a /etc/locale.conf
+grep "LC_CTYPE" /etc/locale.conf && echo "Checking LC_CYPE in /etc/locale.conf. Variable is already set." || \
+    grep "LANG=" /etc/locale.conf | sed 's/LANG=/LC_CTYPE=/g' | sudo tee -a /etc/locale.conf
 sudo locale-gen
 
 chaoticaur() {\
     printf "%s\n" "## Installing Chaotic AUR ##"
-
     printf "%s" "Adding repo " && printf "%s" "${bold}[chaotic-aur] " && printf "%s\n" "${normal}to /etc/pacman.conf."
-    
-    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com && echo "Receiving key for ${bold}chaotic-aur{normal}."
-
-    sudo pacman-key --lsign-key 3056513887B78AEB && echo "Signing key for ${bold}[chaotic-aur]${normal}."
-
-    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' && echo "Installing keyring for ${bold}[chaotic-aur]${normal}."
-
-    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' && echo "Installing mirrorlist for ${bold}chaotic-aur${normal}."
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com && \
+        echo "Receiving key for ${bold}chaotic-aur{normal}."
+    sudo pacman-key --lsign-key 3056513887B78AEB && \
+       echo "Signing key for ${bold}[chaotic-aur]${normal}."
+    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' && \
+       echo "Installing keyring for ${bold}[chaotic-aur]${normal}."
+    yes | sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' && \
+       echo "Installing mirrorlist for ${bold}chaotic-aur${normal}."
 }
 
 chaoticaur || error "Error installing Chaotic AUR."
@@ -133,16 +133,21 @@ installxmonad() { \
 
 choosewm || error "User chose to exit"
 
-installqtile && sudo pacman --needed --ask 4 -Sy qtile qtile-extras dtos-qtile python-psutil || echo "User chose not to install Qtile"
+installqtile && sudo pacman --needed --ask 4 -Sy qtile qtile-extras dtos-qtile python-psutil || \
+    echo "User chose not to install Qtile."
 
-installawesome && sudo pacman -Sy awesome dtos-awesome || echo "User chose not to install Awesome"
+installawesome && sudo pacman -Sy awesome dtos-awesome || \
+    echo "User chose not to install Awesome."
 
-installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd polybar dtos-polybar || echo "User chose not to install Bspwm."
+installbspwm && sudo pacman -Sy bspwm sxhkd dtos-bspwm dtos-sxhkd polybar dtos-polybar || \
+    echo "User chose not to install Bspwm."
 
 installdwm && sudo pacman -Sy dtos-dwm dtos-dwmblocks && \
-    cp /etc/dtos/.config/dwm/dwm.desktop /usr/share/xsessions/dwm.desktop || echo "User chose not to install Dwm"
+    cp /etc/dtos/.config/dwm/dwm.desktop /usr/share/xsessions/dwm.desktop || \
+    echo "User chose not to install Dwm."
 
-installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || echo "User chose not to install XMonad"
+installxmonad && sudo pacman -Sy xmonad xmonad-contrib dtos-xmonad xmobar dtos-xmobar polybar dtos-polybar || \
+    echo "User chose not to install XMonad"
 
 max() {
     echo -e "$1\n$2" | sort -n | tail -1
