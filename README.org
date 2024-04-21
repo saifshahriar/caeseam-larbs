@@ -367,8 +367,8 @@ exitorinstall() {
     if [ $exitstatus = 0 ]; then
         # Take the results and remove the "'s and add new lines.
         # Otherwise, pacman is not going to like how we feed it.
-        programs=$(echo $result | sed 's/" /\n/g' | sed 's/"//g' )
-        echo $programs
+        programs=$(echo "$result" | sed 's/" /\n/g' | sed 's/"//g' )
+        echo "$programs"
         sudo pacman --needed --ask 4 -Sy "$programs" || \
         echo "Failed to install required packages."
     else
@@ -513,17 +513,17 @@ While it would be easier to make packages that could install DTOS configs direct
 printf  "%s\n" "## Copying DTOS configuration files from /etc/dtos into \$HOME"
 
 # If these directories or files exist, the DTOS installation will make a backup of them.
-[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak.$(date +"%Y%m%d_%H%M%S")
-[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak.$(date +"%Y%m%d_%H%M%S")
-[ -f ~/.bashrc ] && mv ~/.bashrc ~/.bashrc.bak.$(date +"%Y%m%d_%H%M%S")
-[ -f ~/.zshrc ] && mv ~/.zshrc ~/.zshrc.bak.$(date +"%Y%m%d_%H%M%S")
+[ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.d.bak."$(date +"%Y%m%d_%H%M%S")"
+[ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak."$(date +"%Y%m%d_%H%M%S")"
+[ -f ~/.bashrc ] && mv ~/.bashrc ~/.bashrc.bak."$(date +"%Y%m%d_%H%M%S")"
+[ -f ~/.zshrc ] && mv ~/.zshrc ~/.zshrc.bak."$(date +"%Y%m%d_%H%M%S")"
 
 # Make the /etc/dtos directory if it doesn't exist. 
 [ ! -d /etc/dtos ] && sudo mkdir /etc/dtos
 
 # Make the ~/.config directory if it doesn't exist, or backup the ~/.config directory if it does exist. 
 [ ! -d ~/.config ] && mkdir ~/.config
-[ -d ~/.config ] && mkdir ~/.config-backup-$(date +%Y.%m.%d-%H%M) && cp -Rf ~/.config ~/.config-backup-$(date +%Y.%m.%d-%H%M)
+[ -d ~/.config ] && mkdir ~/.config-backup-"$(date +%Y.%m.%d-%H%M)" && cp -Rf ~/.config ~/.config-backup-"$(date +%Y.%m.%d-%H%M)"
 
 # Copy all DTOS configs found in /etc/dtos over to the USER's home directory.
 cd /etc/dtos && cp -Rf . ~ && cd -
@@ -533,7 +533,7 @@ cd /etc/dtos && cp -Rf . ~ && cd -
 * Make scripts in .local/bin executable
 #+begin_src bash
 # Change all scripts in .local/bin to be executable.
-find $HOME/.local/bin -type f -print0 | xargs -0 chmod 775
+find "$HOME"/.local/bin -type f -print0 | xargs -0 chmod 775
 
 #+end_src
 
@@ -546,17 +546,17 @@ if [ -d "/etc/dtos/.config/xmonad/" ]; then
         case $choice in
              polybar)
                 sudo pacman -S dtos-polybar polybar
-                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs $HOME/.config/xmonad/xmonad.hs
+                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs "$HOME"/.config/xmonad/xmonad.hs
                 break
                 ;;
              xmobar)
                 sudo pacman -S dtos-xmobar xmobar
-                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-xmobar.hs $HOME/.config/xmonad/xmonad.hs
+                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-xmobar.hs "$HOME"/.config/xmonad/xmonad.hs
                 break
                 ;;
              both)
                 sudo pacman -S dtos-polybar dtos-xmobar polybar xmobar
-                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs $HOME/.config/xmonad/xmonad.hs
+                cp /etc/dtos/.config/xmonad/xmonad-example-configs/xmonad-with-polybar.hs "$HOME"/.config/xmonad/xmonad.hs
                 break
                 ;;
              ,*)
@@ -582,11 +582,11 @@ sudo cp /etc/dtos/.config/xmonad/pacman-hooks/recompile-xmonadh.hook /etc/pacman
 + Set DMBROWSER to 'qutebrowser'
 + Set DMTERM to 'alacritty'
 #+begin_src bash
-[ ! -d $HOME/.config/dmscripts ] && mkdir $HOME/.config/dmscripts
-cp /etc/dmscripts/config $HOME/.config/dmscripts/config
-sed -i 's/DMBROWSER=\"brave\"/DMBROWSER=\"qutebrowser\"/g' $HOME/.config/dmscripts/config
-sed -i 's/DMTERM=\"st -e\"/DMTERM=\"alacritty -e\"/g' $HOME/.config/dmscripts/config
-sed -i 's/setbg_dir=\"${HOME}\/Pictures\/Wallpapers\"/setbg_dir=\"\/usr\/share\/backgrounds\/dtos-backgrounds\"/g' $HOME/.config/dmscripts/config
+[ ! -d "$HOME"/.config/dmscripts ] && mkdir "$HOME"/.config/dmscripts
+cp /etc/dmscripts/config "$HOME"/.config/dmscripts/config
+sed -i 's/DMBROWSER=\"brave\"/DMBROWSER=\"qutebrowser\"/g' "$HOME"/.config/dmscripts/config
+sed -i 's/DMTERM=\"st -e\"/DMTERM=\"alacritty -e\"/g' "$HOME"/.config/dmscripts/config
+sed -i 's/setbg_dir=\"${HOME}\/Pictures\/Wallpapers\"/setbg_dir=\"\/usr\/share\/backgrounds\/dtos-backgrounds\"/g' "$HOME"/.config/dmscripts/config
 
 #+end_src
 
@@ -621,7 +621,7 @@ shells=("fish" "bash" "zsh" "quit")
 select choice in "${shells[@]}"; do
     case $choice in
          fish | bash | zsh)
-            sudo chsh $USER -s "/bin/$choice" && \
+            sudo chsh "$USER" -s "/bin/$choice" && \
             echo -e "$choice has been set as your default USER shell. \
                     \nLogging out is required for this take effect."
             break
@@ -643,7 +643,7 @@ Disable the currently enabled display manager and enable SDDM instead.
 
 #+begin_src bash
 # Disable the current login manager
-sudo systemctl disable $(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}') || echo "Cannot disable current display manager."
+sudo systemctl disable "$(grep '/usr/s\?bin' /etc/systemd/system/display-manager.service | awk -F / '{print $NF}')" || echo "Cannot disable current display manager."
 # Enable sddm as login manager
 sudo systemctl enable sddm
 printf "%s\n" "Enabling and configuring ${bold}SDDM ${normal}as the login manager."
